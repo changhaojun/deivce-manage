@@ -51,16 +51,13 @@ export default {
       this.$router.push({path: '/'});
       sessionStorage.removeItem('actk');
     },
-    async logss() {
-      const res = await this.$http('public/getMenu');
-      console.log(res);
-    }
+    
   },
   created() {
     this.fullname = sessionStorage.getItem('fullname');
   },
   mounted() {
-    this.logss();
+   
   }
 };
 </script>

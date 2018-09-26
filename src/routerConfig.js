@@ -8,8 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 
-const routerConfig = [
-  {
+const routerConfig = [{
     path: '/',
     component: Login,
     layout: Login,
@@ -18,57 +17,59 @@ const routerConfig = [
     path: '/main',
     layout: HeaderAsideLayout,
     component: Dashboard,
-    children: [
-      {
-        path: '/dashboard/analysis',
-        layout: HeaderAsideLayout,
-        component: Dashboard,
-      },
-      {
-        path: '/dashboard/monitor',
-        layout: HeaderAsideLayout,
-        component: NotFound,
-      },
-      {
-        path: '/dashboard/workplace',
-        layout: HeaderAsideLayout,
-        component: NotFound,
-      },
-    ],
+    // children: [{
+    //     path: '/dashboard/analysis',
+    //     layout: HeaderAsideLayout,
+    //     component: Dashboard,
+    //   },
+    //   {
+    //     path: '/dashboard/monitor',
+    //     layout: HeaderAsideLayout,
+    //     component: NotFound,
+    //   },
+    //   {
+    //     path: '/dashboard/workplace',
+    //     layout: HeaderAsideLayout,
+    //     component: NotFound,
+    //   },
+    // ],
   },
   {
-    path: '/table',
+    path: '/typeList',
     layout: HeaderAsideLayout,
     component: NotFound,
-    children: [
-      {
-        path: '/table/basic',
-        layout: HeaderAsideLayout,
-        component: NotFound,
-      },
-      {
-        path: '/table/fixed',
-        layout: HeaderAsideLayout,
-        component: NotFound,
-      },
-    ],
+    // children: [{
+    //     path: '/table/basic',
+    //     layout: HeaderAsideLayout,
+    //     component: NotFound,
+    //   },
+    //   {
+    //     path: '/table/fixed',
+    //     layout: HeaderAsideLayout,
+    //     component: NotFound,
+    //   },
+    // ],
   },
   {
-    path: '/form',
+    path: '/deviceList',
     layout: HeaderAsideLayout,
     component: NotFound,
-    children: [
-      {
-        path: '/form/basic',
-        layout: HeaderAsideLayout,
-        component: NotFound,
-      },
-      {
-        path: '/form/signup',
-        layout: HeaderAsideLayout,
-        component: NotFound,
-      },
-    ],
+    // children: [{
+    //     path: '/form/basic',
+    //     layout: HeaderAsideLayout,
+    //     component: NotFound,
+    //   },
+    //   {
+    //     path: '/form/signup',
+    //     layout: HeaderAsideLayout,
+    //     component: NotFound,
+    //   },
+    // ],
+  },
+  {
+    path: '/deviceManage',
+    layout: HeaderAsideLayout,
+    component: NotFound,
   },
 ];
 

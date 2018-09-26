@@ -82,7 +82,7 @@ export default {
     submitBtn() {
       this.$refs['form'].validate(async valid => {
         if(valid) {
-          const res = await this.$http.post('public/login');
+          const res = await this.$http.post('login');
           this.$message({
             message: '登录成功',
             type: 'success'
