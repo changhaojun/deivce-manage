@@ -6,9 +6,12 @@ import HeaderAsideLayout from './layouts/HeaderAsideLayout';
 import Dashboard from './pages/Dashboard';
 
 import Login from './pages/Login';
+
+import BoxTypeList from './pages/BoxTypeList';
 import NotFound from './pages/NotFound';
 
-const routerConfig = [{
+const routerConfig = [
+  {
     path: '/',
     component: Login,
     layout: Login,
@@ -37,7 +40,7 @@ const routerConfig = [{
   {
     path: '/typeList',
     layout: HeaderAsideLayout,
-    component: NotFound,
+    component: BoxTypeList,
     // children: [{
     //     path: '/table/basic',
     //     layout: HeaderAsideLayout,
@@ -70,7 +73,8 @@ const routerConfig = [{
     path: '/deviceManage',
     layout: HeaderAsideLayout,
     component: NotFound,
-  },
+  }
+ 
 ];
 
 export default routerConfig;

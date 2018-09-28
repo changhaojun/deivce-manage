@@ -58,7 +58,7 @@ const asideMenuConfig = [
     path: '/deviceManage',
     name: '设备库存管理',
     icon: 'el-icon-edit-outline',
-  },
+  }
 ];
 
 export { headerMenuConfig, asideMenuConfig };

@@ -1,6 +1,6 @@
 export default (message) => {
     let result = '';
-    if(message.indexOf(':') !== -1){
+    if(message && message.indexOf(':') !== -1){
       const status = message.split(':')[0];
       const action = message.split(':')[1].split('_')[0];
       switch (action) {
