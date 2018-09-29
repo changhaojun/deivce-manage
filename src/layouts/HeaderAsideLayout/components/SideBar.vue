@@ -1,8 +1,9 @@
 <template>
   <scroll-bar>
     <div class="logo">
-      <img src="https://img.alicdn.com/tfs/TB13UQpnYGYBuNjy0FoXXciBFXa-242-134.png" width="40">
-      <span class="site-name">iOT-BOX</span>
+      <!-- <img src="https://img.alicdn.com/tfs/TB13UQpnYGYBuNjy0FoXXciBFXa-242-134.png" width="40">
+      <span class="site-name">iOT-BOX</span> -->
+      <img src="./../../../assets/iotbox.png" alt="">
     </div>
     <el-menu
       mode="vertical"
@@ -49,6 +50,7 @@ export default {
   data() {
     return {
       asideMenuConfig,
+      
     };
   },
 };
@@ -67,6 +69,11 @@ export default {
   font-size: 20px;
   font-weight: 600;
   overflow: hidden;
+  // background: url(./../../assets/iotbox.png);
+  img{
+    width: 65%;
+    height: 70%;
+  }
 }
 .site-name {
   margin-left: 10px;

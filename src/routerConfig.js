@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 
 import BoxTypeList from './pages/BoxTypeList';
+import Devices from './pages/Devices';
 import NotFound from './pages/NotFound';
 
 const routerConfig = [
@@ -20,61 +21,22 @@ const routerConfig = [
     path: '/main',
     layout: HeaderAsideLayout,
     component: Dashboard,
-    // children: [{
-    //     path: '/dashboard/analysis',
-    //     layout: HeaderAsideLayout,
-    //     component: Dashboard,
-    //   },
-    //   {
-    //     path: '/dashboard/monitor',
-    //     layout: HeaderAsideLayout,
-    //     component: NotFound,
-    //   },
-    //   {
-    //     path: '/dashboard/workplace',
-    //     layout: HeaderAsideLayout,
-    //     component: NotFound,
-    //   },
-    // ],
   },
   {
     path: '/typeList',
     layout: HeaderAsideLayout,
     component: BoxTypeList,
-    // children: [{
-    //     path: '/table/basic',
-    //     layout: HeaderAsideLayout,
-    //     component: NotFound,
-    //   },
-    //   {
-    //     path: '/table/fixed',
-    //     layout: HeaderAsideLayout,
-    //     component: NotFound,
-    //   },
-    // ],
   },
   {
     path: '/deviceList',
     layout: HeaderAsideLayout,
-    component: NotFound,
-    // children: [{
-    //     path: '/form/basic',
-    //     layout: HeaderAsideLayout,
-    //     component: NotFound,
-    //   },
-    //   {
-    //     path: '/form/signup',
-    //     layout: HeaderAsideLayout,
-    //     component: NotFound,
-    //   },
-    // ],
+    component: Devices,
   },
   {
     path: '/deviceManage',
     layout: HeaderAsideLayout,
     component: NotFound,
-  }
- 
+  },
 ];
 
 export default routerConfig;
