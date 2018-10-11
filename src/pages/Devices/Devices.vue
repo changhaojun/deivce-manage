@@ -133,7 +133,7 @@ export default {
       if(this.filter.check_result !== '') {
         requestData.filter = this.filter;
       }
-      console.log(requestData);
+      // console.log(requestData);
       const {result: {rows, total}} = await this.$http('devices',{data: requestData});
       for(const data of rows) {
         data.check_result = data.check_result ? '合格' : '不合格';
