@@ -12,3 +12,9 @@ export default {
   name: 'AppMain',
 };
 </script>
+<style lang="scss" scoped>
+ .app-main{
+   height:calc(100% - 64px);
+ }
+</style>
+

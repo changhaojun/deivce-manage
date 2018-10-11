@@ -87,12 +87,12 @@ export default {
 <style lang="scss">
 .devices-page {
   .search-filter {
-    width: 90%;
+    width: 94%;
     height: auto;
     border: 1px solid #bbb;
     border-radius: 10px;
     margin: 20px auto;
-    padding: 10px 30px;
+    padding: 10px 20px;
   }
 }
 </style>
