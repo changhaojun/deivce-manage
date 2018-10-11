@@ -32,6 +32,7 @@ export default {
     window.addEventListener('resize', () => {
       pie.resize();
     })
+    
   }
 }
 </script>

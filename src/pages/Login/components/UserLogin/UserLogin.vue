@@ -32,7 +32,7 @@
             <el-row class=form-item>
               <el-col>
                 <el-form-item>
-                  <el-checkbox class="checkbox">记住账号</el-checkbox>
+                  <el-checkbox class="checkbox"  v-model="checked">记住账号</el-checkbox>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -63,41 +63,46 @@ export default {
         username: '',
         password: '',
       },
+      checked: true
     };
   },
 
   created() {},
 
   methods: {
-    // submitBtn() {
-    //   this.$refs['form'].validate((valid) => {
-    //     if (valid) {
-    //        this.$message({
-    //           message: '登录成功',
-    //           type: 'success',
-    //        });
-    //     }
-    //   });
-    // },
+   
     submitBtn() {
       this.$refs['form'].validate(async valid => {
         if(valid) {
+          console.log(this.user);
           const res = await this.$http.post('login', this.user);
           this.$message({
             message: '登录成功',
             type: 'success'
           })
+          if(this.checked) {
+            localStorage.setItem('userInfo', JSON.stringify(this.user));
+          }else{
+            localStorage.removeItem('userInfo', JSON.stringify(this.user));
+          }
           const { result: {actk, fullname} } = res;
           sessionStorage.setItem('actk', actk);
           sessionStorage.setItem('fullname', fullname);
+          
           this.$router.push({path: '/main'});
         }
       });
     },
   },
+  created() {
+    if(localStorage.getItem('userInfo')) {
+      const user = JSON.parse(localStorage.getItem('userInfo'));
+      this.user = user;
+    }
+  }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import './UserLogin.scss';
 </style>

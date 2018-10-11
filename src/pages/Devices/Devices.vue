@@ -5,19 +5,19 @@
         <el-form-item label="BOX编号：">
           <el-input v-model="like.collector_id"></el-input>
         </el-form-item>
-        <el-form-item label="生产批次：">
+        <!-- <el-form-item label="生产批次：">
           <el-input v-model="filter.check_result"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="所属客户：">
           <el-input v-model="like.customer_name"></el-input>
         </el-form-item>
         <el-form-item label="是否合格：">
-          <el-select v-model="ontest" placeholder="请选择">
+          <el-select v-model="filter.check_result" placeholder="请选择">
             <el-option
               v-for="item in options"
-              :key="item"
-              :label="item"
-              :value="item">
+              :key="item.num"
+              :label="item.label"
+              :value="item.num">
             </el-option>
           </el-select>
         </el-form-item>
@@ -42,7 +42,7 @@
           style="width:100%;margin-bottom:30px">
           <el-table-column
               prop='collector_id'
-              label='BOX编号'
+              label='采集器ID'
               align="center">
           </el-table-column>
           <el-table-column
@@ -51,12 +51,8 @@
               label='BOX型号'>
           </el-table-column>
           <el-table-column
-              prop='inspect'
-              align="center"
-              label='批次'>
-          </el-table-column>
-          <el-table-column
               prop="customer_name"
+               align="center"
               label="所属客户">
           </el-table-column> 
           <el-table-column
@@ -65,26 +61,17 @@
               label="入库时间">
           </el-table-column>   
           <el-table-column
-              prop="used_flow"
               align="center"
-              label="已使用流量(KB)">
-          </el-table-column> 
-          <el-table-column
-              prop="residual_flow"
-              label="剩余流量(KB)">
-          </el-table-column>        
-          <el-table-column
-              align="center"
-              label="测试报告">
-              <template slot-scope="scope">
-                  <span @click="boxInfo(scope.row)">查看</span>
-              </template>
+              prop="check_result"
+              label="是否合格">
           </el-table-column>
-          
       </el-table>
       <el-pagination
         background
         layout="prev, pager, next"
+        @current-change='pageChange'
+        prev-click='pageChange'
+        next-click='pageChange'
         :total="initData.total">
       </el-pagination>
     </div>
@@ -104,14 +91,17 @@ export default {
       filter: {
         check_result: ''
       },
-      options: ['合格', '不合格', '未检查'],
       date: {
         start_time: '',
         end_time: ''
       },
       page_size: 10,
       page_number: 1,
-      ontest: '',
+      
+      options: [
+        { num: 0, label: '不合格' },
+        { num: 1, label: '合格' },
+      ],
       initData: {
         total: 0,
         datas: []
@@ -122,40 +112,43 @@ export default {
     search() {
       this.getData();
     },
+    
     reset() {
-      this.ontest = '';
       this.like.collector_id = '';
-      this.customer_name = '';
+      this.like.customer_name = '';
       this.filter.check_result = '';
       this.date.start_time = '';
       this.date.end_time = '';
+      this.getData();
     },
-   
-    boxInfo(row) {
-      console.log(row);
-    },
+    // 获取主数据
     async getData() {
       const requestData = {
-        filter: this.filter,
+        // filter: this.filter,
         like: this.like,
         date: this.date,
         page_size: this.page_size,
         page_number: this.page_number
       }
-      const {datas, total} = await this.$http.get('devices',{data: requestData});
-      console.log(datas);
-      for(const data of datas) {
-        data.instock_date = data.instock_date.split('T')[0];
-        if(data.residual_flow) {
-          const used_flow = data.total_flow - data.residual_flow;
-          data.used_flow = used_flow;
-        }else {
-          data.used_flow = data.total_flow;
-        }
+      if(this.filter.check_result !== '') {
+        requestData.filter = this.filter;
       }
-      this.initData.datas = datas;
+      console.log(requestData);
+      const {result: {rows, total}} = await this.$http('devices',{data: requestData});
+      for(const data of rows) {
+        data.check_result = data.check_result ? '合格' : '不合格';
+        data.instock_date && (data.instock_date = data.instock_date.split('T')[0]);
+      }
+      // console.log(total);
+      this.initData.datas = rows;
       this.initData.total = total
-    }
+    },
+
+   //换页
+    pageChange(current){
+      this.page_number = current;
+      this.getData();
+    },
   },
   created() {
     this.getData();
@@ -166,7 +159,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .devices-page {
   .search-filter {
     width: 90%;
