@@ -15,8 +15,8 @@
       <template v-for="item in asideMenuConfig">
         <router-link v-if="!item.children" :to="item.path" :key="item.name">
           <el-menu-item :index="item.path">
-            <i v-if="item.icon" :class="item.icon"></i>
-            <span v-if="item.name" slot="title">{{item.name}}</span>
+            <i v-if="item.icon" :class="item.icon" style="margin-right:10px"></i>
+            <span v-if="item.name" slot="title" style="letter-spacing:1px">{{item.name}}</span>
           </el-menu-item>
         </router-link>
 

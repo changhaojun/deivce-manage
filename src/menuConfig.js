@@ -8,22 +8,26 @@ const asideMenuConfig = [
   {
     path: '/main',
     name: '首页统计',
-    icon: 'el-icon-menu',
+    // icon: 'el-icon-menu',
+    icon: 'iconfont icon-tubiaozhexiantu'
   },
   {
     path: '/typeList',
     name: '型号列表',
-    icon: 'el-icon-date',
+    // icon: 'el-icon-date',
+    icon: 'iconfont icon-liebiao'
   },
   {
     path: '/deviceList',
     name: '设备列表',
-    icon: 'el-icon-edit-outline',
+    // icon: 'el-icon-edit-outline',
+    icon: 'iconfont icon-liebiao'
   },
   {
     path: '/deviceManage',
     name: '设备库存管理',
-    icon: 'el-icon-edit-outline',
+    // icon: 'el-icon-edit-outline',
+    icon: 'iconfont icon-kucun'
   },
 ];
 

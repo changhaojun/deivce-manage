@@ -32,6 +32,7 @@ export default {
     window.addEventListener('resize', () => {
       pie.resize();
     })
+    
   }
 }
 </script>
@@ -47,7 +48,7 @@ export default {
     .trouble-count{
       width: 60%;
       height: 300px;
-      background: orangered;
+      // background: orangered;
     }
   }
 </style>

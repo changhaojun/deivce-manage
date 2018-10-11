@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     async getTypeList() {
-      const {rows} = await this.$http('models');
+      const { result: { rows } } = await this.$http('models');
       for(const row of rows) {
         row.statusDescription = row.status ? '正常' : '停用';
         

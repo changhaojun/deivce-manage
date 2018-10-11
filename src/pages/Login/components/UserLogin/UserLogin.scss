@@ -105,11 +105,12 @@
     color: #dcd6d6;
     margin: 0 8px;
   }
+  .el-input__inner{
+    border: 0 !important;
+  }
 }
 
-.el-input__inner{
-  border: 0 !important;
-}
+
 
 @media screen and (max-width: 720px) {
   .user-login {
