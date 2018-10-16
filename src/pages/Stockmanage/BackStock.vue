@@ -24,7 +24,8 @@ export default {
             OutOrBackStockParams:{ //出库或者退库参数
                 customer_id:this.item.customer_id,
                 type:"backstock",
-                fault_id:""
+                fault_id:"",
+                user_id:sessionStorage.getItem('user_id')
             },
         }
     },

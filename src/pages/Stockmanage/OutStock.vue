@@ -22,7 +22,8 @@ export default {
             customer:[],
             OutOrBackStockParams:{ //出库或者退库参数
                 customer_id:"",
-                type:"outsrock",
+                type:"outstock",
+                user_id:sessionStorage.getItem('user_id')
             },
         }
     },

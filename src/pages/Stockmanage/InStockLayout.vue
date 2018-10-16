@@ -37,7 +37,8 @@ data(){
         inStock:{
             collector_model:"",
             collector_id:[],
-            check_result:""
+            check_result:"",
+            user_id:sessionStorage.getItem('user_id')
         },
         options:[
             {
@@ -48,7 +49,8 @@ data(){
             id:1,
             label:"合格"
             }
-        ]
+        ],
+        
     }
 },
 methods:{
@@ -92,7 +94,7 @@ created(){
         width:98%;
     }
     .el-select{
-        width:370px;
+        width:98%;
     }
 }
 </style>

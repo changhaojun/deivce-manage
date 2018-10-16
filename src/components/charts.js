@@ -2,7 +2,8 @@ import echarts from 'echarts/lib/echarts';
 import 'echarts/lib/chart/bar';
 import 'echarts/lib/chart/line';
 import 'echarts/lib/chart/pie';
-
+import 'echarts/lib/component/tooltip';
+import 'echarts/lib/component/legend';
 const splitLine = {
     show: true,
     lineStyle: {
@@ -29,37 +30,31 @@ const grid = {
     left: '4%',  
     right: '4%',  
     bottom: '10%',
-    top: '16%',  
+    top: '10%',  
     containLabel: true  
 };
 
 //柱状图
-export const barCharts = (el, dataX, dataY, barColor) => {
+export const barCharts = (el, dataX, dataY) => {
     const barOption = {
         grid: grid,
-        series: [{
-            type: 'bar',
-            data: dataY,
-            itemStyle: {
-                normal: {
-                    color: barColor
-                }
-            }
-        }],
+        // color:barColor,
+        tooltip: {
+            show:true
+        },
+        legend: {
+            data: ['全部', '出库', '未出库']
+        },
         xAxis: {
-            data: dataX,
-            axisLine: {
-                lineStyle: lineStyle
-            },
-            splitLine: splitLine
+            data: dataX,      
         },
         yAxis: {
             type: 'value',
-            splitLine: splitLine,
-            axisLine: {
-                lineStyle: lineStyle
+            axisLabel: {
+                formatter: '{value}'
             }
-        }
+        },
+        series:dataY,
     };
 
     const bar = echarts.init(el);
@@ -185,6 +180,11 @@ export const screenPie = (el, data) => {
     let fz = w < 1200 ? 10 : 15;
     const colors = ['#b5b5b5', '#00d2eb', '#f2bf0f'];
     const screenPieOption = {
+        tooltip: {
+            show:true,
+            trigger: 'item',
+            formatter: "{b}: {c} ({d}%)"
+        },
         series: [
             {
                 type: 'pie',

@@ -85,9 +85,10 @@ export default {
           }else{
             localStorage.removeItem('userInfo', JSON.stringify(this.user));
           }
-          const { result: {actk, fullname} } = res;
+          const { result: {actk, fullname, user_id} } = res;
           sessionStorage.setItem('actk', actk);
           sessionStorage.setItem('fullname', fullname);
+          sessionStorage.setItem('user_id', user_id);
           
           this.$router.push({path: '/main'});
         }
