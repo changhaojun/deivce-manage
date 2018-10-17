@@ -5,35 +5,16 @@
       <span class="site-name">iOT-BOX</span> -->
       <img src="./../../../assets/iotbox.png" alt="">
     </div>
-    <el-menu
-      mode="vertical"
-      :show-timeout="200"
-      background-color="#00142a"
-      text-color="hsla(0, 0%, 100%, .65)"
-      active-text-color="#409EFF"
-    >
-      <template v-for="item in asideMenuConfig">
-        <router-link v-if="!item.children" :to="item.path" :key="item.name">
-          <el-menu-item :index="item.path">
-            <i v-if="item.icon" :class="item.icon" style="margin-right:10px"></i>
-            <span v-if="item.name" slot="title" style="letter-spacing:1px">{{item.name}}</span>
-          </el-menu-item>
-        </router-link>
-
-        <el-submenu v-else :index="item.name || item.path" :key="item.name">
-          <template slot="title">
-            <i v-if="item && item.icon" :class="item.icon"></i>
-            <span v-if="item && item.name" slot="title">{{item.name}}</span>
-          </template>
-          <template v-for="child in item.children" v-if="!child.hidden">
-            <router-link :to="item.path + child.path" :key="child.name">
-              <el-menu-item :index="item.path + child.path">
-                <span v-if="child && child.name" slot="title">{{child.name}}</span>
-              </el-menu-item>
-            </router-link>
-          </template>
-        </el-submenu>
-
+    <el-menu mode="vertical" :show-timeout="200" background-color="#00142a" text-color="hsla(0, 0%, 100%, .65)" active-text-color="#409EFF">
+      <template v-for="item in asideMenuConfig" >
+        <mu-list :key ="item.name">
+          <mu-list-item button :ripple="true" v-if="!item.children" :to="item.path" :key="item.name" @click="toUrl(item)">
+            <mu-list-item-action>
+              <i v-if="item.icon" :class="item.icon"></i>
+            </mu-list-item-action>
+            <mu-list-item-title style="letter-spacing:1px">{{item.name}}</mu-list-item-title>
+          </mu-list-item>
+        </mu-list>
       </template>
     </el-menu>
   </scroll-bar>
@@ -50,13 +31,18 @@ export default {
   data() {
     return {
       asideMenuConfig,
-      
     };
   },
+  methods: {
+    toUrl(item) {
+      this.$emit('active', item.name);
+      sessionStorage.setItem('title',item.name);
+    }
+  }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .logo {
   display: flex;
   justify-content: center;
@@ -69,8 +55,7 @@ export default {
   font-size: 20px;
   font-weight: 600;
   overflow: hidden;
-  // background: url(./../../assets/iotbox.png);
-  img{
+  img {
     width: 65%;
     height: 70%;
   }
@@ -79,7 +64,7 @@ export default {
   margin-left: 10px;
 }
 .sidebar-container {
-  box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
+  box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
   transition: width 0.28s;
   width: 256px !important;
   height: 100%;
@@ -89,33 +74,21 @@ export default {
   left: 0;
   z-index: 1001;
   overflow: hidden;
-  a {
-    display: inline-block;
-    width: 100%;
-  }
   .el-menu {
     padding-top: 16px;
     width: 100% !important;
     border: none;
-  }
-  .el-submenu .el-menu-item {
-    min-width: 256px !important;
-    padding-left: 48px !important;
-    background-color: #000c17 !important;
-    &:hover {
-      color: #fff !important;
-    }
-  }
-  .el-menu-item,
-  .el-submenu .el-menu-item {
-    &.is-active {
+    .router-link-active {
       background-color: #188fff !important;
-      color: #fff !important;
+      // color: #fff !important;
     }
-  }
-  .el-submenu__title i {
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.65);
+    .mu-item {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.65);
+      .iconfont {
+        color: rgba(255, 255, 255, 0.65);
+      }
+    }
   }
 }
 </style>

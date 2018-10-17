@@ -1,71 +1,14 @@
 <template>
   <div class="devices-page">
-    <div class="search-filter">
-      <el-form ref="form" label-width="100px" size="medium" :inline='true'>
-        <el-form-item label="BOX编号：">
-          <!-- <el-input v-model="like.collector_id"></el-input> -->
-          <mu-text-field v-model="like.collector_id"></mu-text-field><br />
-        </el-form-item>
-        <el-form-item label="所属客户：">
-          <mu-text-field v-model="like.customer_name"></mu-text-field><br />
-          <!-- <el-input v-model="like.customer_name"></el-input> -->
-        </el-form-item>
-        <el-form-item label="是否合格：">
-          <mu-select  v-model="filter.check_result" filterable  placeholder="请选择" full-width>
-            <mu-option v-for="item in options" :key="item.num" :label="item.label" :value="item.num"></mu-option>
-          </mu-select>
-          <!-- <el-select v-model="filter.check_result" placeholder="请选择">
-            <el-option v-for="item in options" :key="item.num" :label="item.label" :value="item.num">
-            </el-option>
-          </el-select> -->
-        </el-form-item>
-        <el-form-item label="入库时间：">
-          <el-col :span="11">
-            <mu-date-input v-model="date.start_time" label="开始日期" label-float full-width></mu-date-input>
-            <!-- <el-date-picker type="date" placeholder="选择日期" v-model="date.start_time" style="width: 100%;"></el-date-picker> -->
-          </el-col>
-          <el-col class="line" :span="1" style="text-align:center">-</el-col>
-          <el-col :span="11">
-            <mu-date-input v-model="date.end_time" label="结束日期" label-float full-width></mu-date-input>
-            <!-- <el-date-picker type="date" placeholder="选择日期" v-model="date.end_time" style="width: 100%;"></el-date-picker> -->
-          </el-col>
-        </el-form-item>
-      </el-form>
-      <el-row justify="center" type="flex">
-        <el-button type="primary" @click="search">搜索</el-button>
-        <el-button @click="reset">重置</el-button>
-      </el-row>
-    </div>
-    <div class="content">
-      <el-table :data="initData.datas" style="width:100%;margin-bottom:30px">
-        <el-table-column prop='collector_id' label='采集器ID' align="center">
-        </el-table-column>
-        <el-table-column prop='collector_model' align="center" label='BOX型号'>
-        </el-table-column>
-        <el-table-column prop="customer_name" align="center" label="所属客户">
-        </el-table-column>
-        <el-table-column prop="indate" align="center" label="入库时间">
-        </el-table-column>
-        <el-table-column prop="type" align="center" label="库存状态">
-        </el-table-column>
-        <el-table-column align="center" prop="check_result" label="是否合格">
-        </el-table-column>
-        <el-table-column label="库存轨迹">
-          <template slot-scope="scope">
-            <mu-button color="primary" @click="lookTrack(scope.$index, scope.row)">查看</mu-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination background layout="prev, pager, next" @current-change='pageChange' prev-click='pageChange' next-click='pageChange' :total="initData.total">
-      </el-pagination>
-    </div>
+    <table-page :manager="false"></table-page>
   </div>
 </template>
 
 <script>
+import tablePage from '../../components/tablePage'
 export default {
   name: 'Devices',
-  components: {},
+  components: {tablePage},
   data() {
     return {
       like: {
@@ -149,24 +92,6 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.devices-page {
-  .el-form-item{
-    margin-bottom: 0;
-  }
-  .search-filter {
-    width: 94%;
-    height: auto;
-    border: 1px solid #bbb;
-    border-radius: 10px;
-    margin: 20px auto;
-    padding: 10px 20px;
-    background: #ffffff;
-  }
-  .content {
-    width: calc(90% + 40px);
-    margin: 0px auto;
-  }
-}
+<style lang="scss">
 </style>
 
