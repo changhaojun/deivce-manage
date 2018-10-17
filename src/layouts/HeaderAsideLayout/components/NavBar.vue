@@ -1,7 +1,7 @@
 <template>
   <mu-appbar class="navbar" color="primary">
     {{title}}
-    <mu-menu slot="right">
+    <mu-menu slot="right" open-on-hover>
       <mu-button flat>
         <span class="iconfont icon-zhanghao"></span>
         <span class="user-name">{{fullname}}</span>
