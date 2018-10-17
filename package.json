@@ -16,6 +16,7 @@
     "element-ui": "^2.3.6",
     "file-saver": "^2.0.0-rc.3",
     "moment": "^2.22.2",
+    "muse-ui": "^3.0.1",
     "normalize.css": "^8.0.0",
     "script-loader": "^0.7.2",
     "vue": "^2.5.16",
@@ -37,7 +38,10 @@
     "@vue/cli-plugin-eslint": "^3.0.0-beta.6",
     "@vue/cli-service": "^3.0.0-beta.6",
     "@vue/eslint-config-airbnb": "^3.0.0-beta.6",
+    "babel-plugin-import": "^1.9.1",
     "eslint-plugin-vue": "^4.5.0",
+    "less": "^3.8.1",
+    "less-loader": "^4.1.0",
     "node-sass": "^4.7.2",
     "sass-loader": "^6.0.6",
     "vue-template-compiler": "^2.5.13"
