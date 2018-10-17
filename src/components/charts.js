@@ -35,7 +35,7 @@ const grid = {
 };
 
 //柱状图
-export const barCharts = (el, dataX, dataY) => {
+export const barCharts = (el, dataX, dataY,legend) => {
     const barOption = {
         grid: grid,
         // color:barColor,
@@ -43,7 +43,7 @@ export const barCharts = (el, dataX, dataY) => {
             show:true
         },
         legend: {
-            data: ['全部', '出库', '未出库']
+            data:legend
         },
         xAxis: {
             data: dataX,      

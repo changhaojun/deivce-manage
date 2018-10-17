@@ -7,7 +7,7 @@ import App from './App.vue';
 import router from './router';
 import service from './components/server.js';
 import 'muse-ui/lib/styles/base.less';
-import { Button, Select, Helpers, TextField,Checkbox,Radio,Switch,theme,DateInput,Picker,Form } from 'muse-ui';
+import { Button, Select, Helpers, TextField,Checkbox,Radio,Switch,theme,DateInput,Picker,Form ,Icon} from 'muse-ui';
 import 'muse-ui/lib/styles/theme.less';
 Vue.use(ElementUI);
 
@@ -19,6 +19,7 @@ Vue.use(Checkbox);
 Vue.use(Radio);
 Vue.use(Switch);
 Vue.use(theme);
+Vue.use(Icon);
 Vue.use(DateInput);
 Vue.use(Picker);
 Vue.use(Form);

@@ -33,27 +33,24 @@ export default {
   methods: {
     //获取型号
     async getDevicesModels(){
-      const {result} = await this.$http('http://121.42.253.149:18859/app/mock/25/v1/modelsCount');
-      // for(let i=0 ; i<result.rows.length;i++){
-          // dataX.push(result.name);
-         
-          // dataY.push(result.rows[i].value);
-      // }
+      const {result} = await this.$http('datas/modelsCount');
+      const legend=[];
       for(let i=0;i<result.value.length;i++){
        result.value[i].name =  result.value[i].type === 'all' ? '全部' : result.value[i].type === 'outstock' ? '出库' : '未出库';
        result.value[i].type = 'bar';
+       result.value[i].barWidth = 50; 
+       legend.push(result.value[i].name)
       }
-      console.log(result.value)
-      this.model = barCharts(this.$refs.model,result.name,result.value );
+      this.model = barCharts(this.$refs.model,result.name,result.value,legend );
     },
     //获取库存
     async getStock(){
-      const {result} = await this.$http('http://121.42.253.149:18859/app/mock/25/v1/repertoryCount');
-      this.stock = screenPie(this.$refs.stock,[result.rows]);
+      const {result} = await this.$http('datas/repertoryCount');
+      this.stock = screenPie(this.$refs.stock,result.rows);
     },
     //获取故障
     async getTrouble(){
-      const {result} = await this.$http('http://121.42.253.149:18859/app/mock/25/v1/faultCount');
+      const {result} = await this.$http('datas/faultCount');
       this.fault = screenPie(this.$refs.trouble,result.rows);
     }
   },
