@@ -1,8 +1,8 @@
 <template>
   <div class="app-wrapper" >
-    <side-bar class="sidebar-container"></side-bar>
+    <side-bar class="sidebar-container" @active="active"></side-bar>
     <div class="main-container">
-      <nav-bar></nav-bar>
+      <nav-bar :title="title"></nav-bar>
       <app-main></app-main>
     </div>
   </div>
@@ -18,6 +18,23 @@ export default {
     SideBar,
     AppMain,
   },
+  data () {
+    return {
+      title:''
+    }
+  },
+  methods:{
+    active(name){
+      this.title = name;
+    }
+  },
+  mounted(){
+    if(sessionStorage.getItem('title')){
+      this.title = sessionStorage.getItem('title');
+    }else{
+      this.title = '首页统计';
+    }
+  }
 };
 </script>
 
