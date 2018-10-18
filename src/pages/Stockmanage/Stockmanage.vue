@@ -5,7 +5,6 @@
     
     <!-- 表格数据 -->
     <table-page :manager="true" class="Table">
-    
     </table-page>
    
   </div>
@@ -44,16 +43,14 @@ export default {
 
 <style lang="scss" scoped>
 .stock-manage{
-  margin:20px 20px;
-  padding: 10px 20px;
-  // background: #ffffff;
   .Table{
-    margin-top:50px;
+    padding-top:50px;
   }
   .export{
+      margin-top:20px;
       font-size: 14px;
       float:right;
-
+      margin-right:20px;
   }
 }
 </style>
