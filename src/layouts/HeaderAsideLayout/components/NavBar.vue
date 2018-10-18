@@ -46,7 +46,7 @@ export default {
 <style lang="scss" scoped>
 .navbar {
   width: 100%;
-  mu-menu {
+  .mu-menu {
     height: 100%;
     .iconfont {
       margin-right: 10px;
