@@ -79,7 +79,6 @@
             <el-pagination background layout="prev, pager, next" @current-change='pageChange' prev-click='pageChange' next-click='pageChange' :total="initData.total">
             </el-pagination>
         </div>
-
         <!-- 弹窗 -->
         <el-dialog :title="dialogData.title" :visible.sync="dialogData.dialogFormVisible" :width="dialogData.dialogWidth" @close="Cancel">
             <!-- 入库 -->

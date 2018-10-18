@@ -35,19 +35,23 @@ const grid = {
 };
 
 //柱状图
-export const barCharts = (el, dataX, dataY,legend) => {
+export const barCharts = (el, dataX, dataY,legend,barColor) => {
     const barOption = {
         grid: grid,
-        // color:barColor,
+        color:barColor,
         tooltip: {
-            show:true
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
         },
         legend: {
             data:legend
         },
-        xAxis: {
-            data: dataX,      
-        },
+        xAxis: [{
+            data: dataX,   
+            axisTick: {show: false},   
+        }],
         yAxis: {
             type: 'value',
             axisLabel: {
@@ -172,7 +176,7 @@ export const lineBar = (el, dataX, dataY1, dataY2) => {
 };
 
 //饼图
-export const screenPie = (el, data) => {
+export const screenPie = (el, data,pieColor) => {
     const w = document.body.clientWidth;
     let len = w < 1200 ? 10 : 30;
     let radius = w < 1200 ? ['30%', '44%'] : ['42%', '62%'];
@@ -202,7 +206,7 @@ export const screenPie = (el, data) => {
                 }
             }
         ],
-        // color: colors 
+        color: pieColor 
     };
     const pie = echarts.init(el);
     pie.setOption(screenPieOption);

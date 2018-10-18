@@ -38,20 +38,21 @@ export default {
       for(let i=0;i<result.value.length;i++){
        result.value[i].name =  result.value[i].type === 'all' ? '全部' : result.value[i].type === 'outstock' ? '出库' : '未出库';
        result.value[i].type = 'bar';
-       result.value[i].barWidth = 50; 
+       result.value[i].barWidth = 40; 
+       result.value[i].barGap = 0 ;
        legend.push(result.value[i].name)
       }
-      this.model = barCharts(this.$refs.model,result.name,result.value,legend );
+      this.model = barCharts(this.$refs.model,result.name,result.value,legend,['rgba(33,150,243,0.73)',"rgba(236,37,19,0.70)",'rgba(0,0,0,0.45)'] );
     },
     //获取库存
     async getStock(){
       const {result} = await this.$http('datas/repertoryCount');
-      this.stock = screenPie(this.$refs.stock,result.rows);
+      this.stock = screenPie(this.$refs.stock,result.rows,['rgba(0,0,0,0.45)',"rgba(236,37,19,0.70)"]);
     },
     //获取故障
     async getTrouble(){
       const {result} = await this.$http('datas/faultCount');
-      this.fault = screenPie(this.$refs.trouble,result.rows);
+      this.fault = screenPie(this.$refs.trouble,result.rows,['rgba(0,0,0,0.45)','rgba(236,37,19,0.70)']);
     }
   },
   mounted() {
