@@ -27,7 +27,9 @@ export default {
     return {
       model:"",
       stock:"",
-      fault:""
+      fault:"",
+      chartColor:['#003366','#e5323e','#4cabce'],
+      // chartColor:['rgba(33,150,243,0.73)',"rgba(236,37,19,0.70)",'rgba(0,0,0,0.45)'] 
     }
   },
   methods: {
@@ -42,17 +44,17 @@ export default {
        result.value[i].barGap = 0 ;
        legend.push(result.value[i].name)
       }
-      this.model = barCharts(this.$refs.model,result.name,result.value,legend,['rgba(33,150,243,0.73)',"rgba(236,37,19,0.70)",'rgba(0,0,0,0.45)'] );
+      this.model = barCharts(this.$refs.model,result.name,result.value,legend,this.chartColor);
     },
     //获取库存
     async getStock(){
       const {result} = await this.$http('datas/repertoryCount');
-      this.stock = screenPie(this.$refs.stock,result.rows,['rgba(0,0,0,0.45)',"rgba(236,37,19,0.70)"]);
+      this.stock = screenPie(this.$refs.stock,result.rows,this.chartColor);
     },
     //获取故障
     async getTrouble(){
       const {result} = await this.$http('datas/faultCount');
-      this.fault = screenPie(this.$refs.trouble,result.rows,['rgba(0,0,0,0.45)','rgba(236,37,19,0.70)']);
+      this.fault = screenPie(this.$refs.trouble,result.rows,this.chartColor);
     }
   },
   mounted() {
@@ -82,7 +84,7 @@ export default {
       width:100%;
         .stock-count{
           width:98%;
-          height: 300px;
+          height: 400px;
         }
     }
     .stockContent,.troubleContent{
@@ -93,7 +95,7 @@ export default {
     }
     .trouble-count{
         width: 90%;
-        height: 300px;
+        height: 250px;
         display: inline-block;
       }
     .troubleContent{
