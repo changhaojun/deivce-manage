@@ -7,7 +7,7 @@ import App from './App.vue';
 import router from './router';
 import service from './components/server.js';
 import 'muse-ui/lib/styles/base.less';
-import { Button, Select, Helpers, TextField,Checkbox,Radio,Switch,theme,DateInput,Picker,Form, AppBar,List,Menu} from 'muse-ui';
+import { Button, Select, Helpers, TextField,Checkbox,Radio,Switch,theme,DateInput,Picker,Form, AppBar,List, Menu} from 'muse-ui';
 import 'muse-ui/lib/styles/theme.less';
 Vue.use(ElementUI);
 
@@ -25,6 +25,7 @@ Vue.use(AppBar);
 Vue.use(Form);
 Vue.use(List);
 Vue.use(Menu);
+// Vue.use(Container);
 theme.add('carbon', {
   primary: '#317FFE',
   secondary: '#ff4081',
@@ -37,11 +38,9 @@ theme.add('carbon', {
 Vue.prototype.$http = service;
 Vue.config.productionTip = false;
 router.beforeEach((to, from, next) => { //拦截器
-  console.log(to)
   if (to.path === '/') {
     next();
   } else {
-    console.log(sessionStorage.getItem('userInfo'))
     if (!sessionStorage.getItem('userInfo')) {
       router.replace('/');
     } else {

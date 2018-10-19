@@ -5,44 +5,22 @@
       <h2 class="slogan">
         欢迎使用 <br /> <span style="color:red">BOX</span> 生产管理系统
       </h2>
-      <div class="form-container">
-        <h4 class="form-title">登录</h4>
-        <el-form ref="form" :model="user" label-width="0">
-          <div class="form-items">
-            <el-row class="form-item">
-              <el-col>
-                <el-form-item prop="username" :rules="[ { required: true, message: '账号不能为空'}]">
-                  <div class="form-line">
-                    <i class="el-icon-edit-outline input-icon"></i>
-                    <el-input placeholder="账号" v-model="user.username"></el-input>
-                  </div>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row class="form-item">
-              <el-col>
-                <el-form-item prop="password" :rules="[ { required: true, message: '密码不能为空'}]">
-                  <div class="form-line">
-                    <i class="el-icon-service input-icon"></i>
-                    <el-input type="password" placeholder="密码" v-model="user.password"></el-input>
-                  </div>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row class=form-item>
-              <el-col>
-                <el-form-item>
-                  <el-checkbox class="checkbox"  v-model="checked">记住账号</el-checkbox>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row class="form-item">
-              <el-button type="primary" class="submit-btn" size="small" @click="submitBtn">
-                登   录
-              </el-button>
-            </el-row>
-          </div>
-        </el-form>
+      <div class="form-container" style="padding:0 60px">
+        <h4 class="form-title" style="margin-top:20px">登录</h4>
+          <mu-form ref="form" class="mu-demo-form" :model="user">
+            <mu-form-item label="用户名" prop="username" :rules="usernameRules">
+              <mu-text-field v-model="user.username" prop="username"></mu-text-field>
+            </mu-form-item>
+            <mu-form-item label="密码" prop="password" :rules="passwordRules">
+                <mu-text-field type="password" v-model="user.password" prop="password"></mu-text-field>
+            </mu-form-item>
+            <mu-form-item>
+                 <mu-checkbox v-model="remember" value="记住账号" label="记住账号"></mu-checkbox>
+            </mu-form-item>
+            <mu-form-item>
+              <mu-button color="primary" @click="submitBtn">{{btnTxt}}</mu-button>
+            </mu-form-item>
+          </mu-form>
       </div>
     </div>
   </div>
@@ -63,7 +41,15 @@ export default {
         username: '',
         password: '',
       },
-      checked: true
+      btnTxt: '登   录',
+      remember: true,
+      disable: false,
+      usernameRules: [
+        { validate: (val) => !!val, message: '用户名不能为空'},
+      ],
+      passwordRules: [
+        { validate: (val) => !!val, message: '密码不能为空'},
+      ],
     };
   },
 
@@ -72,17 +58,21 @@ export default {
   methods: {
    
     submitBtn() {
-      this.$refs['form'].validate(async valid => {
+      this.$refs['form'].validate().then(async valid => {
         if(valid) {
+          this.btnTxt = '登陆中...'
+          this.disable = true;
           const res = await this.$http.post('login', this.user);
           this.$message({
             message: '登录成功',
             type: 'success'
           })
-          if(this.checked) {
+          if(this.remember) {
+            localStorage.setItem('remember', true);
             localStorage.setItem('userInfo', JSON.stringify(this.user));
           }else{
-            localStorage.removeItem('userInfo', JSON.stringify(this.user));
+            localStorage.setItem('remember', false);
+            localStorage.removeItem('userInfo');
           }
           const { result: {actk, fullname, user_id} } = res;
           sessionStorage.setItem('actk', actk);
@@ -95,11 +85,12 @@ export default {
     },
   },
   created() {
-    if(localStorage.getItem('userInfo')) {
+    if(localStorage.getItem('remember') === 'true') {
+      this.remember = true;
       const user = JSON.parse(localStorage.getItem('userInfo'));
       this.user = user;
     }else{
-      this.checked=false;
+      this.remember = false;
     }
   }
 };
