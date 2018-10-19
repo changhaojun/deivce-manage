@@ -37,13 +37,20 @@ export default {
         },
         //确定出库
         async SureBackStock(){
-            const {result} = await this.$http.put('devices/'+this.item._id,this.OutOrBackStockParams);
-            this.$message({
-                message: '成功退库',
-                type: 'success'
-            })  
-            this.Cancel();
-            this.$emit("getTypeList");
+            if(this.OutOrBackStockParams.fault_id){
+                const {result} = await this.$http.put('devices/'+this.item._id,this.OutOrBackStockParams);
+                this.$message({
+                    message: '成功退库',
+                    type: 'success'
+                })  
+                this.Cancel();
+                this.$emit("getTypeList");
+            }else{
+                this.$message({
+                    message: '请选择退库原因',
+                    type: 'warning'
+                })
+            }
         },
         initData(){
             this.OutOrBackStockParams.fault_id = "";
