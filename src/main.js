@@ -36,7 +36,19 @@ theme.add('carbon', {
 
 Vue.prototype.$http = service;
 Vue.config.productionTip = false;
-
+router.beforeEach((to, from, next) => { //拦截器
+  console.log(to)
+  if (to.path === '/') {
+    next();
+  } else {
+    console.log(sessionStorage.getItem('userInfo'))
+    if (!sessionStorage.getItem('userInfo')) {
+      router.replace('/');
+    } else {
+      next();
+    }
+  }
+});
 new Vue({
   router,
   render: h => h(App),

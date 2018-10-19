@@ -74,7 +74,6 @@ export default {
     submitBtn() {
       this.$refs['form'].validate(async valid => {
         if(valid) {
-          console.log(this.user);
           const res = await this.$http.post('login', this.user);
           this.$message({
             message: '登录成功',
@@ -89,7 +88,7 @@ export default {
           sessionStorage.setItem('actk', actk);
           sessionStorage.setItem('fullname', fullname);
           sessionStorage.setItem('user_id', user_id);
-          
+          sessionStorage.setItem('userInfo', JSON.stringify(this.user));
           this.$router.push({path: '/main'});
         }
       });
@@ -99,6 +98,8 @@ export default {
     if(localStorage.getItem('userInfo')) {
       const user = JSON.parse(localStorage.getItem('userInfo'));
       this.user = user;
+    }else{
+      this.checked=false;
     }
   }
 };
