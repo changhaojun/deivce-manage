@@ -32,13 +32,13 @@
             <el-row class=form-item>
               <el-col>
                 <el-form-item>
-                  <el-checkbox class="checkbox"  v-model="checked">记住账号</el-checkbox>
+                  <el-checkbox class="checkbox"  v-model="remember">记住账号</el-checkbox>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row class="form-item">
-              <el-button type="primary" class="submit-btn" size="small" @click="submitBtn">
-                登   录
+              <el-button type="primary" class="submit-btn" size="small" @click="submitBtn" :disabled="disable">
+                {{btnTxt}}
               </el-button>
             </el-row>
           </div>
@@ -63,7 +63,9 @@ export default {
         username: '',
         password: '',
       },
-      checked: true
+      btnTxt: '登   录',
+      remember: true,
+      disable: false
     };
   },
 
@@ -74,16 +76,19 @@ export default {
     submitBtn() {
       this.$refs['form'].validate(async valid => {
         if(valid) {
-          console.log(this.user);
+          this.btnTxt = '登陆中...'
+          this.disable = true;
           const res = await this.$http.post('login', this.user);
           this.$message({
             message: '登录成功',
             type: 'success'
           })
-          if(this.checked) {
+          if(this.remember) {
+            localStorage.setItem('remember', true);
             localStorage.setItem('userInfo', JSON.stringify(this.user));
           }else{
-            localStorage.removeItem('userInfo', JSON.stringify(this.user));
+            localStorage.setItem('remember', false);
+            localStorage.removeItem('userInfo');
           }
           const { result: {actk, fullname, user_id} } = res;
           sessionStorage.setItem('actk', actk);
@@ -96,9 +101,12 @@ export default {
     },
   },
   created() {
-    if(localStorage.getItem('userInfo')) {
+    if(localStorage.getItem('remember') === 'true') {
+      this.remember = true;
       const user = JSON.parse(localStorage.getItem('userInfo'));
       this.user = user;
+    }else{
+      this.remember = false;
     }
   }
 };
