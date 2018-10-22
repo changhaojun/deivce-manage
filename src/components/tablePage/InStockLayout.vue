@@ -10,7 +10,7 @@
             <el-input
             type="textarea"
             :rows="4"
-            placeholder="请输入内容(注：多个id回车隔开)"
+            placeholder="请输入内容8位(注：多个id回车或者,或者空格或者、或者. 或者/或者\隔开)"
             v-model="collector_id">
             </el-input>
           </el-form-item>
@@ -59,14 +59,36 @@ methods:{
          this.collectorData=result.rows
     },
     async InStock(){
-        this.inStock.collector_id=this.collector_id.split("\n");
-        const {result} = await this.$http.post('devices',this.inStock);
-        this.$message({
-            message: '成功入库',
-            type: 'success'
-        })  
-        this.Cancel();
-        this.$emit("getTypeList");
+        const inReg=/\n|,|，|\s+|;|；|'|’|”|"|\.|\/|\\|\|\。|-|`|~|、/
+        const itemReg = /\D/
+        this.inStock.collector_id=this.collector_id.split(inReg);
+        if(this.inStock.collector_id===[]||this.inStock.check_result===""||this.inStock.collector_model===""){
+            this.$message({
+                message: '请完善信息', 
+                type: 'warning'
+            }) 
+        }else{
+            let len=0;
+            this.inStock.collector_id.forEach((item,index,arr)=>{
+                    if(item.length !== 8 || itemReg.test(item)){
+                        this.$message({
+                            message: 'id长度或者格式不正确', 
+                            type: 'warning'
+                        })   
+                    }else{
+                        len++;
+                    }
+            })
+            if(len===this.inStock.collector_id.length){
+                const {result} = await this.$http.post('devices',this.inStock);
+                this.$message({
+                    message: '成功入库', 
+                    type: 'success'
+                })  
+                this.Cancel();
+                this.$emit("getTypeList");
+            }
+        }
     },
     Cancel(){
        this.$emit("Cancel")

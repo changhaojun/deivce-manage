@@ -1,5 +1,7 @@
 <template>
     <div class="table-page">
+        <mu-button class="instock" fab small  @click="inStock" v-if="manager">入库</mu-button>
+        <mu-button class="export" fab small @click='export2Excel'>导出</mu-button>
         <div class="searc-filter">
             <mu-form :model="conditions" label-position="top" label-width="100">
                 <el-row :gutter="20">
@@ -48,7 +50,7 @@
                         <mu-form-item>
                             <mu-button color="primary" @click="search">搜索</mu-button>
                             <mu-button color="warning" @click="reset">重置</mu-button>
-                            <mu-button v-if="manager" color="secondary" @click="inStock">入库</mu-button>
+                            <!-- <mu-button v-if="manager" color="secondary" @click="inStock">入库</mu-button> -->
                         </mu-form-item>
                     </el-col>
                 </el-row>
@@ -56,23 +58,14 @@
         </div>
         <div class="content">
             <el-table :data="initData.datas" style="width:100%;margin-bottom:30px">
-                <el-table-column prop='collector_id' min-width="120" label='采集器ID'>
-                </el-table-column>
-                <el-table-column prop='collector_model' min-width="180" label='BOX型号'>
-                </el-table-column>
-                <el-table-column prop="customer_name" min-width="180" label="所属客户">
-                </el-table-column>
-                <el-table-column prop="indate" label="入库时间">
-                </el-table-column>
-                <el-table-column prop="type" label="库存状态">
-                </el-table-column>
-                <el-table-column prop="check_result" label="是否合格">
+                <el-table-column :prop='item.prop' min-width="120" :label='item.label' v-for="item in columns" :key="item.index">
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" :width="buttonBoxWidth" class-name="edit-buttons">
                     <template slot-scope="scope">
-                        <mu-button v-if="manager" color="primary" small @click="OutStockDialog(scope.$index, scope.row)">出库</mu-button>
-                        <mu-button v-if="manager" color="primary" small @click="BackStockDialog(scope.$index, scope.row)">退库</mu-button>
-                        <mu-button color="primary" small @click="ViewPathDialog(scope.$index, scope.row)">查看</mu-button>
+                        <mu-button v-if="manager" color="primary" mini @click="OutStockDialog(scope.$index, scope.row)">出库</mu-button>
+                        <mu-button v-if="manager" color="primary" mini @click="BackStockDialog(scope.$index, scope.row)">退库</mu-button>
+                        <mu-button v-if="manager" color="primary" mini @click="deleteStock(scope.$index, scope.row)">{{scope.row.status?'删除':'恢复'}}</mu-button>
+                        <mu-button color="primary" mini @click="ViewPathDialog(scope.$index, scope.row)">查看</mu-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -96,6 +89,14 @@
             <!-- 查看轨迹 -->
             <div v-if="dialogData.type === 3">
                 <view-path v-on:Cancel="Cancel" :item.sync="itemDevicesData"></view-path>
+            </div>
+            <!-- 删除库存 -->
+             <div v-if="dialogData.type === 4">
+                <span>确定删除库存 - <span class="colName">{{itemDevicesData.collector_id}}</span></span>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="Cancel">取 消</el-button>
+                    <el-button type="primary" @click="sureDelete">确 定</el-button>
+                </div>
             </div>
         </el-dialog>
     </div>
@@ -148,7 +149,35 @@ export default {
                 dialogWidth: '500px',
                 type: 0
             },
-            itemDevicesData: null
+            itemDevicesData: null,
+            columns:[
+                {
+                   label:"采集器ID" ,
+                   prop:"collector_id"
+                },
+                {
+                   label:"BOX型号" ,
+                   prop:"collector_model"
+                },
+                {
+                   label:"所属客户" ,
+                   prop:"customer_name"
+                },
+                {
+                   label:"入库时间" ,
+                   prop:"indate"
+                },
+                {
+                   label:"库存状态" ,
+                   prop:"type"
+                },
+                {
+                   label:"是否合格" ,
+                   prop:"check_result"
+                }
+
+            ],
+            deleteIndex:null
         }
     },
     methods: {
@@ -237,6 +266,28 @@ export default {
                 })
             }
         },
+        //删除
+        deleteStock(index,row){
+            this.dialogData.title = '删除';
+            this.dialogData.type = 4;
+            this.dialogData.dialogWidth = '500px';
+            this.itemDevicesData = row;
+            this.deleteIndex = index;
+            this.showDialog();
+        },
+        async sureDelete(){
+            const result= await this.$http('http://121.42.253.149:18859/app/mock/25/v1/devices/'+this.itemDevicesData._id);
+            this.$message({
+                    message:this.itemDevicesData.status?'删除成功':'恢复成功',
+                    type: 'success'
+            })
+            this.initData.datas.forEach((item,index,arr)=>{
+                if(this.deleteIndex === index ){
+                    item.status = !item.status;
+                }
+            })
+            this.Cancel();
+        },
         //查看
         ViewPathDialog( index, row ) {
             this.dialogData.title = '轨迹 - ' + row.collector_id;
@@ -250,6 +301,23 @@ export default {
             const { result } = await this.$http('deviceTrack', { data: { collector_id: item.collector_id } });
             this.itemDevicesData = result.rows;
         },
+        formatJson(filterVal, jsonData) {
+        　　　　return jsonData.map(v => filterVal.map(j => v[j]))
+        },
+        export2Excel() {	    　　　　
+            require.ensure([], () => {                       //这里的require的路径要写对，不然运行会有错误	    　　　　　　
+                const { export_json_to_excel } = require('@/vendor/Export2Excel');
+                const tHeader = [];	
+                const filterVal = [];	
+                for(let i=0;i<this.columns.length;i++){
+                    tHeader.push(this.columns[i].label);
+                    filterVal.push(this.columns[i].prop);
+                }
+                const list = this.initData.datas;
+                const data = this.formatJson(filterVal, list);
+                export_json_to_excel(tHeader, data, '设备库存管理');
+            })
+        }
     },
     created() {
         this.calculateBox();
@@ -259,8 +327,11 @@ export default {
 </script>
 <style lang="scss">
 .table-page {
+    width:100%;
+    height:100%;
+    padding:20px;
   .searc-filter {
-    margin: 20px;
+    margin: 50px 20px 20px 20px;
     padding: 10px 20px;
     border: 1px solid #eee;
     border-radius: 6px;
@@ -272,6 +343,9 @@ export default {
   .content {
     margin: 20px;
     .el-table {
+      .mu-raised-button{
+          min-width:60px;
+      }
       tr {
         height: 70px;
         td {
@@ -284,6 +358,23 @@ export default {
         }
       }
     }
+  }
+  .export{
+      font-size: 14px;
+      float:right;
+      margin-right:20px;
+  }
+  .instock{
+      float: left;
+      margin-left: 20px
+  }
+  .dialog-footer{
+      margin-top:20px;
+      width:100%;
+      text-align: right
+  }
+  .colName{
+      color:red
   }
 }
 </style>
