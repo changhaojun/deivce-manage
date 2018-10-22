@@ -5,37 +5,44 @@
         <div class="searc-filter">
             <mu-form :model="conditions" label-position="top" label-width="100">
                 <el-row :gutter="20">
-                    <el-col :span="6">
+                    <el-col :span="4">
                         <mu-form-item label="采集器ID">
                             <mu-text-field v-model="conditions.like.collector_id"></mu-text-field>
                         </mu-form-item>
                     </el-col>
-                    <el-col :span="6">
+                    <el-col :span="4">
                         <mu-form-item label="采集器型号">
                             <mu-text-field v-model="conditions.like.collector_model"></mu-text-field>
                         </mu-form-item>
                     </el-col>
-                    <el-col :span="6">
+                    <el-col :span="4">
                         <mu-form-item label="所属客户">
                             <mu-text-field v-model="conditions.like.customer_name"></mu-text-field>
                         </mu-form-item>
                     </el-col>
-                    <el-col :span="6">
+                    <el-col :span="4">
                         <mu-form-item label="是否合格">
                             <mu-select v-model="conditions.filter.check_result" filterable placeholder="请选择" full-width>
                                 <mu-option v-for="item in checkOptions" :key="item.num" :label="item.label" :value="item.num"></mu-option>
                             </mu-select>
                         </mu-form-item>
                     </el-col>
-                </el-row>
-                <el-row :gutter="20">
-                    <el-col :span="6">
+                    <el-col :span="4">
                         <mu-form-item label="库存状态">
                             <mu-select v-model="conditions.filter.type" filterable placeholder="请选择" full-width>
                                 <mu-option v-for="item in stcokOptions" :key="item.value" :label="item.label" :value="item.value"></mu-option>
                             </mu-select>
                         </mu-form-item>
                     </el-col>
+                    <el-col :span="4">
+                        <mu-form-item label="启停状态">
+                            <mu-select v-model="conditions.filter.status" filterable placeholder="请选择" full-width>
+                                <mu-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"></mu-option>
+                            </mu-select>
+                        </mu-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
                     <el-col :span="6">
                         <mu-form-item label="开始时间">
                             <mu-date-input v-model="conditions.date.start_time" label-float full-width></mu-date-input>
@@ -120,7 +127,8 @@ export default {
                 },
                 filter: {
                     check_result: '',
-                    type: ''
+                    type: '',
+                    status:''
                 },
                 date: {
                     start_time: '',
@@ -133,6 +141,10 @@ export default {
             checkOptions: [
                 { num: 0, label: '不合格' },
                 { num: 1, label: '合格' },
+            ],
+            statusOptions:[
+                { num: 0, label: '停用' },
+                { num: 1, label: '启用' },
             ],
             stcokOptions: [
                 { label: '未出库', value: 'instock' },
@@ -182,6 +194,7 @@ export default {
     },
     methods: {
         search() {
+            this.page_number = 1;
             this.getData();
         },
         reset() {
@@ -208,10 +221,14 @@ export default {
             if (this.conditions.filter.type === '') {
                 delete this.conditions.filter.type;
             }
+            if (this.conditions.filter.status === '') {
+                delete this.conditions.filter.status;
+            }
             requestData.filter = this.conditions.filter;
             const { result: { rows, total } } = await this.$http('devices', { data: requestData });
             for (const data of rows) {
                 data.check_result = data.check_result ? '合格' : '不合格';
+                data.status = data.status ? '启用' : '停用';
                 data.indate && (data.indate = data.indate.split('T')[0]);
                 data.type = data.type === 'instock' ? '未出库' : '已出库';
             }
@@ -276,7 +293,7 @@ export default {
             this.showDialog();
         },
         async sureDelete(){
-            const result= await this.$http('http://121.42.253.149:18859/app/mock/25/v1/devices/'+this.itemDevicesData._id);
+            const result= await this.$http('devices/'+this.itemDevicesData._id);
             this.$message({
                     message:this.itemDevicesData.status?'删除成功':'恢复成功',
                     type: 'success'
