@@ -10,6 +10,7 @@ import Login from './pages/Login';
 import BoxTypeList from './pages/BoxTypeList';
 import Devices from './pages/Devices';
 import StockManage from './pages/Stockmanage';
+import ContractManage from './pages/ContractManage';
 
 const routerConfig = [
   {
@@ -36,6 +37,11 @@ const routerConfig = [
     path: '/deviceManage',
     layout: HeaderAsideLayout,
     component: StockManage,
+  },
+  {
+    path: '/contractManage',
+    layout: HeaderAsideLayout,
+    component: ContractManage,
   },
 ];
 

@@ -29,6 +29,12 @@ const asideMenuConfig = [
     // icon: 'el-icon-edit-outline',
     icon: 'iconfont icon-kucun'
   },
+  {
+    path: '/contractManage',
+    name: '合同管理',
+    // icon: 'el-icon-edit-outline',
+    icon: 'iconfont icon-kucun'
+  },
 ];
 
 export { headerMenuConfig, asideMenuConfig };

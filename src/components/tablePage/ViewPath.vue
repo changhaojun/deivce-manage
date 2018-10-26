@@ -57,9 +57,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .view-path{
-    margin-top:-40px;
-    margin-left:-10px;
-    margin-right:-10px;
+  
 }
 </style>
 

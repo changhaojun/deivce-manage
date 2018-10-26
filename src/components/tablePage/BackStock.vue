@@ -67,6 +67,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .back-stock{
+    margin-top:20px;
     .dialog-footer{
         text-align: right;
     }
