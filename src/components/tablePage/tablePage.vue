@@ -71,7 +71,7 @@
                 <el-table-column label="操作" fixed="right" :width="buttonBoxWidth" class-name="edit-buttons">
                     <template slot-scope="scope">
                          <mu-button v-if="manager" color="primary" mini @click="TestDialog(scope.$index, scope.row)">测试</mu-button>
-                        <mu-button v-if="manager" color="primary" mini @click="OutStockDialog(scope.$index, scope.row)">出库</mu-button>
+                        <mu-button v-if="manager" color="primary" mini @click="OutStockDialog(scope.row,false)">出库</mu-button>
                         <mu-button v-if="manager" color="primary" mini @click="BackStockDialog(scope.$index, scope.row)">退库</mu-button>
                         <mu-button v-if="manager" color="primary" mini @click="deleteStock(scope.$index, scope.row)">{{scope.row.status?'删除':'恢复'}}</mu-button>
                         <mu-button color="primary" mini @click="ViewPathDialog(scope.$index, scope.row)">查看</mu-button>
@@ -97,7 +97,7 @@
             </div>
             <!-- 出库 -->
             <div v-if="dialogData.type === 1">
-                <out-stock v-on:Cancel="Cancel" v-on:getTypeList="getData" :item="itemDevicesData"></out-stock>
+                <out-stock v-on:Cancel="Cancel" v-on:getTypeList="getData" :item="itemDevicesData" :batch="batch"  ref="outStock"></out-stock>
             </div>
             <!-- 退库 -->
             <div v-if="dialogData.type === 2">
@@ -199,16 +199,37 @@ export default {
                 },
                 {
                     label: "库存状态",
-                    prop: "type"
+                    prop: "stock_status"
                 },
                 {
                     label: "检测状态",
                     prop: "check_result"
+                },
+                {
+                    label: "PCB厂家",
+                    prop: "PCB_name"
+                },
+                {
+                    label: "通讯模块供应商",
+                    prop: "CM_name"
+                },
+                {
+                    label: "元器件供应商",
+                    prop: "CAP_name"
+                },
+                {
+                    label: "SIM供应商",
+                    prop: "SIM_name"
+                },
+                {
+                    label: "焊接厂家",
+                    prop: "weld_name"
                 }
 
             ],
             deleteIndex: null,
-            multipleSelection: []
+            multipleSelection: [],
+            batch:false
         }
     },
     methods: {
@@ -227,12 +248,14 @@ export default {
             this.conditions.date.end_time = '';
             this.getData();
         },
+        //批量出库赋值
         handleSelectionChange(val){
             this.multipleSelection=val;
         },
+        //批量出库
         batchStock(){
             if(this.multipleSelection.length>0){
-                this.OutStockDialog(this.multipleSelection)
+                this.OutStockDialog(this.multipleSelection,true)
             }else{
                 this.$message({
                     message: '请选择采集器',
@@ -260,10 +283,10 @@ export default {
             requestData.filter = this.conditions.filter;
             const { result: { rows, total } } = await this.$http('devices', { data: requestData });
             for (const data of rows) {
-                data.check_result = data.check_result === 2 ? '合格' : data.check_result === 1 ? '维修中' : "待测";
+                data.check_result = data.check_result === 0 ? '不合格' : data.check_result === 2 ? '未检测' : data.check_result === 3 ? "维修中" :"合格";
                 data.status = data.status ? '启用' : '停用';
                 data.indate && (data.indate = data.indate.split('T')[0]);
-                data.type = data.type === 'instock' ? '未出库' : '已出库';
+                data.stock_status = data.stock_status === 0 ? '未出库' : '已出库';
             }
             this.initData.datas = rows;
             this.initData.total = total
@@ -275,16 +298,16 @@ export default {
         },
         calculateBox() {
             if (this.manager) {
-                this.buttonBoxWidth = 360;
+                this.buttonBoxWidth = 300;
             } else {
-                this.buttonBoxWidth = 120;
+                this.buttonBoxWidth = 80;
             }
         },
         showDialog() {
             this.dialogData.dialogFormVisible = true;
         },
         Cancel() {
-            this.dialogData.dialogFormVisible = false
+            this.dialogData.dialogFormVisible = false;      
         },
         // 入库
         inStock() {
@@ -294,12 +317,47 @@ export default {
             this.showDialog();
         },
         //出库
-        OutStockDialog(row) {
+        OutStockDialog(row,batch) {
+            let checkedLen=0;
+            let outstockLen=0;
+            if(batch){ //先判断是否批量
+                row.forEach((item)=>{ 
+                   if(item.check_result === '合格'){
+                       checkedLen++;
+                   }
+                   if(item.stock_status === '已出库'){
+                       outstockLen++;
+                   }
+                })
+                // if(checkedLen !== row.length || outstockLen !== 0 ){ //是否所有都合格
+                //     this.$message({
+                //         message: '请检查是否所选都合格或者已出库，不合格、已出库不能出库',
+                //         type: 'warning'
+                //     })
+                // }else{ 
+                    this.OutVar(row, batch);
+                // }
+            }else{
+                // if(row.check_result !== '合格'){
+                //     this.$message({
+                //         message: '请先测试，合格之后才能出库',
+                //         type: 'warning'
+                //     })
+                // }else{
+                    this.OutVar(row, batch);
+                // }
+            }  
+        },
+        OutVar(row, batch){ //出库需要改变的变量       
             this.dialogData.title = '出库';
             this.dialogData.type = 1;
             this.showDialog();
             this.dialogData.dialogWidth = '500px';
             this.itemDevicesData = row;
+            this.batch = batch;
+            if(this.$refs.outStock){
+                this.$refs.outStock.initData();
+            }
         },
         //退库
         BackStockDialog(index, row) {

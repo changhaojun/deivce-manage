@@ -51,7 +51,21 @@ Axios.interceptors.response.use(
         type: 'error'
       });
       return Promise.reject(res.data);
-    } else if (res.data.code !== 200) {
+    } else if(res.data.code ===403){
+      res.data.message = convert(res.data.message);
+      Message({
+        showClose: true,
+        message: '存在重复采集器',
+        type: 'error'
+      });
+      this.$notify({
+        title: '提示',
+        message: res.data.result.join(","),
+        duration: 0,
+        type: 'warning',
+        position: 'bottom-right'
+      });
+    }else if (res.data.code !== 200) {
       res.data.message = convert(res.data.message);
       Message({
         showClose: true,

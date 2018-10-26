@@ -30,7 +30,7 @@
             <el-col :span="12">
                 <el-form-item label="PCB厂家：" label-width="130px"  >
                    <el-select  placeholder="请选择PCB厂家" v-model="inStock.PCB_supplier" value-key="inStock.PCB_supplier">
-                        <el-option :label="item.supplier_name" :value="item._id" v-for="(item,index) in pactOptions" :key="index"></el-option>
+                        <el-option :label="item.supplier_name" :value="item._id" v-for="(item,index) in supplierOptions" :key="index"></el-option>
                     </el-select>
                 </el-form-item>
            </el-col>
@@ -39,14 +39,14 @@
             <el-col :span="12">
                 <el-form-item label="通讯模块供应商：" label-width="130px"  >
                     <el-select  placeholder="请选择通讯模块供应商" v-model="inStock.CM_supplier" value-key="inStock.CM_supplier">
-                        <el-option :label="item.supplier_name" :value="item._id" v-for="(item,index) in pactOptions" :key="index"></el-option>
+                        <el-option :label="item.supplier_name" :value="item._id" v-for="(item,index) in supplierOptions" :key="index"></el-option>
                     </el-select>
                 </el-form-item> 
             </el-col>
             <el-col :span="12">
                 <el-form-item label="SIM供应商：" label-width="130px"  >
                     <el-select  placeholder="请选择SIM供应商" v-model="inStock.SIM_supplier" value-key="inStock.SIM_supplier">
-                        <el-option :label="item.supplier_name" :value="item._id" v-for="(item,index) in pactOptions" :key="index"></el-option>
+                        <el-option :label="item.supplier_name" :value="item._id" v-for="(item,index) in supplierOptions" :key="index"></el-option>
                     </el-select>
                 </el-form-item>  
             </el-col>
@@ -55,14 +55,14 @@
             <el-col :span="12">
                 <el-form-item label="焊接厂家：" label-width="130px"  >
                      <el-select  placeholder="请选择焊接厂家" v-model="inStock.weld_supplier" value-key="inStock.weld_supplier">
-                        <el-option :label="item.supplier_name" :value="item._id" v-for="(item,index) in pactOptions" :key="index"></el-option>
+                        <el-option :label="item.supplier_name" :value="item._id" v-for="(item,index) in supplierOptions" :key="index"></el-option>
                     </el-select>
                 </el-form-item>  
             </el-col>
             <el-col :span="12">
                 <el-form-item label="元器件供应商：" label-width="130px"  >
                    <el-select  placeholder="请选择元器件供应商" v-model="inStock.CAP_supplier" value-key="inStock.CAP_supplier">
-                        <el-option :label="item.supplier_name" :value="item._id" v-for="(item,index) in pactOptions" :key="index"></el-option>
+                        <el-option :label="item.supplier_name" :value="item._id" v-for="(item,index) in supplierOptions" :key="index"></el-option>
                     </el-select>
                 </el-form-item>
             </el-col>
@@ -81,16 +81,16 @@ data(){
     return{
         collectorData:[],
         inStock:{
-            collector_model:"",
-            collector_id:"",
-            user_id:sessionStorage.getItem('user_id'),
-            PCB_supplier: "",
-            CAP_supplier :"",
-            CM_supplier:"",
-            SIM_supplier:"",
-            weld_supplier:"",
-            collector_amount:"",
-            user_name:sessionStorage.getItem('fullname')
+            collector_model:"", //Box型号
+            collector_id:"", //BOX起始编号
+            user_id:sessionStorage.getItem('user_id'), 
+            PCB_supplier: "", //PCB厂家
+            CAP_supplier :"", //元器件供应商
+            CM_supplier:"", //通讯模块供应商
+            SIM_supplier:"", // SIM供应商
+            weld_supplier:"", //焊接厂家
+            collector_amount:"", // 采集器数量
+            user_name:sessionStorage.getItem('fullname') 
         },
         options:[
             {
@@ -102,7 +102,7 @@ data(){
             label:"合格"
             }
         ],
-        pactOptions:[] 
+        supplierOptions:[]  //供应商数据
     }
 },
 methods:{
@@ -149,14 +149,14 @@ methods:{
         this.inStock.weld_supplier = '';
         this.inStock.collector_amount = '';
     },
-    async getPactData(){
+    async getSupplierData(){ //
         const { result } = await this.$http('supplier');
-        this.pactOptions = result.rows;
+        this.supplierOptions = result.rows;
     }
 },
 created(){
     this.getBoxModel()
-    this.getPactData()
+    this.getSupplierData()
     this.inData()
 }
 }
