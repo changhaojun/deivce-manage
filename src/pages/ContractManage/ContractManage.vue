@@ -55,7 +55,7 @@
         <!-- 弹窗 -->
         <el-dialog :title="title" :visible.sync="dialogData.dialogFormVisible" width="500px" @close="Cancel">
             <add-contract v-on:Cancel="Cancel" ref="addContract" v-on:getContract="getContract" :itemData.sync="itemData"></add-contract>
-        </el-dialog>
+        </el-dialog> 
     </div>
 </template>
 
