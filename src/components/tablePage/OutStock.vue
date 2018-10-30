@@ -28,15 +28,15 @@
             </el-tab-pane>
             <el-tab-pane label="替换出库" v-if="!batch" name="replaceStock">
                 <el-form>
-                    <el-form-item label="替换采集器：" label-width="100px">
+                    <el-form-item label="替换目标采集器：" label-width="130px">
                         <el-input  placeholder="请输入内容" v-model="OutOrBackStockParams.replace_collector">  </el-input> 
                     </el-form-item> 
-                    <el-form-item label="服务延长：" label-width="100px">
+                    <el-form-item label="服务延长：" label-width="130px">
                         <el-input-number placeholder="请输入内容" v-model="OutOrBackStockParams.increase" controls-position="right" :min="0">
                         </el-input-number>
                         <span class="note">   单位：月</span> 
                     </el-form-item> 
-                    <el-form-item label="备注：" label-width="100px">
+                    <el-form-item label="备注：" label-width="130px">
                         <el-input   type="textarea" placeholder="请输入内容" v-model="OutOrBackStockParams.remark">  </el-input>
                     </el-form-item>
                 </el-form>
@@ -101,36 +101,38 @@ export default {
         },
         //确定出库
         async SureOutStock() {
+             this.OutOrBackStockParams.collector_id.length === 0 ?  this.OutOrBackStockParams.collector_id.push(this.copyCollectorId) :this.OutOrBackStockParams.collector_id;//只有替换出库存在的时候才会执行，批量出库的length不可能等于0
             if(this.outStockType === 'normalStock'){//正常出库条件
-                this.OutOrBackStockParams.collector_id.length === 0 ?  this.OutOrBackStockParams.collector_id.push(this.copyCollectorId) :this.OutOrBackStockParams.collector_id;//只有替换出库存在的时候才会执行，批量出库的length不可能等于0
+                this.OutOrBackStockParams.type = 'outstock';          
                 if(this.OutOrBackStockParams.customer_id ==='' ||  this.OutOrBackStockParams.system === "" || this.OutOrBackStockParams.pact_number === '' || this.OutOrBackStockParams.collector_id.length === 0 ){
                     this.$message({
                         message: '请完善正常出库信息',
                         type: 'warning'
                     })
                 }else{ 
-                    // const { result } = await this.$http.put('devices', this.OutOrBackStockParams);
-                    // this.$message({
-                    //     message: '成功出库',
-                    //     type: 'success'
-                    // })
-                    // this.Cancel();
-                    // this.$emit("getTypeList");
+                    const { result } = await this.$http.put('devices', this.OutOrBackStockParams);
+                    this.$message({
+                        message: '成功出库',
+                        type: 'success'
+                    })
+                    this.Cancel();
+                    this.$emit("getTypeList");
                 }
             }else{//替换出库条件
+                this.OutOrBackStockParams.type = 'change';
                 if(this.OutOrBackStockParams.replace_collector === ''){
                     this.$message({
                         message: '请完善替换出库信息',
                         type: 'warning'
                     })
                 }else{
-                    // const { result } = await this.$http.put('devices', this.OutOrBackStockParams);
-                    // this.$message({
-                    //     message: '成功出库',
-                    //     type: 'success'
-                    // })
-                    // this.Cancel();
-                    // this.$emit("getTypeList");
+                    const { result } = await this.$http.put('devices', this.OutOrBackStockParams);
+                    this.$message({
+                        message: '成功出库',
+                        type: 'success'
+                    })
+                    this.Cancel();
+                    this.$emit("getTypeList");
                 }
             }         
         },

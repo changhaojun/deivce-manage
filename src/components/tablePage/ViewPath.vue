@@ -1,9 +1,11 @@
 <template>
     <div class="view-path">
-        <d2-crud
-        :columns="columns"
-        :data="item"
-        />
+        <el-scrollbar style="height:100%">
+            <d2-crud
+            :columns="columns"
+            :data="item"
+            />
+        </el-scrollbar>
     </div>
 </template>
 <script>
@@ -56,5 +58,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.view-path{
+    height:300px;
+}
 </style>
 

@@ -29,7 +29,7 @@
                     </el-col>
                     <el-col :span="4">
                         <mu-form-item label="库存状态">
-                            <mu-select v-model="conditions.filter.type" filterable placeholder="请选择" full-width>
+                            <mu-select v-model="conditions.filter.stock_status" filterable placeholder="请选择" full-width>
                                 <mu-option v-for="item in stcokOptions" :key="item.value" :label="item.label" :value="item.value"></mu-option>
                             </mu-select>
                         </mu-form-item>
@@ -65,6 +65,7 @@
         </div>
         <div class="content">
             <el-table :data="initData.datas" style="width:100%;margin-bottom:30px" ref="multipleTable" @selection-change="handleSelectionChange">
+            <!-- <el-table :data="initData.datas" style="width:100%;margin-bottom:30px" ref="multipleTable"  v-if="manager"> -->
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column :prop='item.prop' min-width="120" :label='item.label' v-for="item in columns" :key="item.index">
                 </el-table-column>
@@ -73,7 +74,7 @@
                          <mu-button v-if="manager" color="primary" mini @click="TestDialog(scope.$index, scope.row)">测试</mu-button>
                         <mu-button v-if="manager" color="primary" mini @click="OutStockDialog(scope.row,false)">出库</mu-button>
                         <mu-button v-if="manager" color="primary" mini @click="BackStockDialog(scope.$index, scope.row)">退库</mu-button>
-                        <mu-button v-if="manager" color="primary" mini @click="deleteStock(scope.$index, scope.row)">{{scope.row.status?'删除':'恢复'}}</mu-button>
+                        <mu-button v-if="manager" color="primary" mini @click="deleteStock(scope.$index, scope.row)">删除</mu-button>
                         <mu-button color="primary" mini @click="ViewPathDialog(scope.$index, scope.row)">查看</mu-button>
                     </template>
                 </el-table-column>
@@ -104,8 +105,10 @@
                 <back-stock v-on:Cancel="Cancel" v-on:getTypeList="getData" :item="itemDevicesData"></back-stock>
             </div>
             <!-- 查看轨迹 -->
-            <div v-if="dialogData.type === 3">
-                <view-path v-on:Cancel="Cancel" :item.sync="itemDevicesData"></view-path>
+            <div v-if="dialogData.type === 3" style="height:300px">
+                <!-- <el-scrollbar style="height:100%"> -->
+                    <view-path v-on:Cancel="Cancel" :item.sync="itemDevicesData"></view-path>
+                <!-- </el-scrollbar> -->
             </div>
             <!-- 删除库存 -->
             <div v-if="dialogData.type === 4">
@@ -144,7 +147,7 @@ export default {
                 },
                 filter: {
                     check_result: '',
-                    stock_status : '',
+                    stock_status: '',
                     status: ''
                 },
                 date: {
@@ -154,19 +157,19 @@ export default {
             },
             page_size: 10,
             page_number: 1,
-
             checkOptions: [
-                { num: 0, label: '待测' },
-                { num: 1, label: '维修中' },
-                { num: 2, label: '合格' },
+                { num: 0, label: '不合格'},
+                { num: 1, label: '合格' },
+                { num: 2, label: '未检测' },
+                { num: 3, label: '维修中' },
             ],
             statusOptions: [
                 { num: 0, label: '停用' },
                 { num: 1, label: '启用' },
             ],
             stcokOptions: [
-                { label: '未出库', value: 'instock' },
-                { label: '已出库', value: 'outstock' }
+                { label: '未出库', value: 0 },
+                { label: '已出库', value: 1 }
             ],
             initData: {
                 total: 0,
@@ -203,7 +206,7 @@ export default {
                 },
                 {
                     label: "检测状态",
-                    prop: "check_result"
+                    prop: "test_result"
                 },
                 {
                     label: "PCB厂家",
@@ -225,11 +228,16 @@ export default {
                     label: "焊接厂家",
                     prop: "weld_name"
                 }
-
             ],
             deleteIndex: null,
             multipleSelection: [],
-            batch:false
+            batch:false,
+            isStop:{
+                type:"delete",
+                collector_id:[],
+                user_id:sessionStorage.getItem('user_id'),
+                user_name:sessionStorage.getItem('fullname')
+            }
         }
     },
     methods: {
@@ -283,7 +291,7 @@ export default {
             requestData.filter = this.conditions.filter;
             const { result: { rows, total } } = await this.$http('devices', { data: requestData });
             for (const data of rows) {
-                data.check_result = data.check_result === 0 ? '不合格' : data.check_result === 2 ? '未检测' : data.check_result === 3 ? "维修中" :"合格";
+                data.test_result = data.check_result === 0 ? '不合格' : data.check_result === 2 ? '未检测' : data.check_result === 3 ? "维修中" :"合格";
                 data.status = data.status ? '启用' : '停用';
                 data.indate && (data.indate = data.indate.split('T')[0]);
                 data.stock_status = data.stock_status === 0 ? '未出库' : '已出库';
@@ -322,30 +330,35 @@ export default {
             let outstockLen=0;
             if(batch){ //先判断是否批量
                 row.forEach((item)=>{ 
-                   if(item.check_result === '合格'){
+                   if(item.test_result === '合格'){
                        checkedLen++;
                    }
                    if(item.stock_status === '已出库'){
                        outstockLen++;
                    }
                 })
-                // if(checkedLen !== row.length || outstockLen !== 0 ){ //是否所有都合格
-                //     this.$message({
-                //         message: '请检查是否所选都合格或者已出库，不合格、已出库不能出库',
-                //         type: 'warning'
-                //     })
-                // }else{ 
+                if(checkedLen !== row.length || outstockLen !== 0 ){ //是否所有都合格
+                    this.$message({
+                        message: '请检查是否所选都合格或者已出库，不合格、已出库不能出库',
+                        type: 'warning'
+                    })
+                }else{ 
                     this.OutVar(row, batch);
-                // }
+                }
             }else{
-                // if(row.check_result !== '合格'){
-                //     this.$message({
-                //         message: '请先测试，合格之后才能出库',
-                //         type: 'warning'
-                //     })
-                // }else{
-                    this.OutVar(row, batch);
-                // }
+                if(row.test_result !== '合格'){
+                    this.$message({
+                        message: '请先测试，合格之后才能出库',
+                        type: 'warning'
+                    })
+                }else if( row.stock_status === '已出库'){
+                    this.$message({
+                        message: "已经出库了，不能重复出库",
+                        type: 'warning'
+                    })
+                }else{
+                     this.OutVar(row, batch);
+                }
             }  
         },
         OutVar(row, batch){ //出库需要改变的变量       
@@ -365,36 +378,41 @@ export default {
             this.dialogData.type = 2;
             this.dialogData.dialogWidth = '500px';
             this.itemDevicesData = row;
-            if (this.initData.datas[index].type === '已出库') {
+            // if (this.initData.datas[index].type === '已出库') {
                 this.showDialog();
-            } else {
-                this.$message({
-                    message: '请先出库',
-                    type: 'warning'
-                })
-            }
+            // } else {
+            //     this.$message({
+            //         message: '请先出库',
+            //         type: 'warning'
+            //     })
+            // }
         },
         //删除
-        deleteStock(index, row) {
-            this.dialogData.title = '删除';
-            this.dialogData.type = 4;
-            this.dialogData.dialogWidth = '500px';
-            this.itemDevicesData = row;
-            this.deleteIndex = index;
-            this.showDialog();
+        deleteStock(index, row) {        
+            if(row.stock_status === '已出库'){
+                this.$message({
+                    message: '该设备出库了，不能删除哦！',
+                    type: 'warning'
+                })
+            }else{
+                this.dialogData.title = '删除';
+                this.dialogData.type = 4;
+                this.dialogData.dialogWidth = '500px';
+                this.itemDevicesData = row;
+                this.deleteIndex = index;
+                this.isStop.collector_id = [];
+                this.showDialog();
+            }
         },
         async sureDelete() {
-            const result = await this.$http('devices/' + this.itemDevicesData._id);
+            this.isStop.collector_id.push(this.itemDevicesData.collector_id);
+            const result = await this.$http.put('devices',this.isStop);
             this.$message({
-                message: this.itemDevicesData.status ? '删除成功' : '恢复成功',
+                message: '删除成功',
                 type: 'success'
             })
-            this.initData.datas.forEach((item, index, arr) => {
-                if (this.deleteIndex === index) {
-                    item.status = !item.status;
-                }
-            })
             this.Cancel();
+            this.getData();
         },
         //查看
         ViewPathDialog(index, row) {
@@ -441,7 +459,6 @@ export default {
                 this.$refs.Test.initData()
             }
         }
-
     },
     created() {
         this.calculateBox();
@@ -468,10 +485,11 @@ export default {
     margin: 20px;
     .el-table {
       .mu-raised-button {
-        min-width: 40px;
+        min-width: 43px;
         height:26px;
+        line-height: 26px;
         .mu-button-wrapper{
-            padding:0 8px;
+            padding:0 7px;
         }
       }
       tr {
@@ -513,5 +531,6 @@ export default {
       display: inline-block;
       margin-top:20px;
   }
+  
 }
 </style>

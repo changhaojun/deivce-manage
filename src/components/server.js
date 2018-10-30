@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {
-  Message
+  Message,Notification
 } from 'element-ui';
 // import conf from '../../config/index';
 import convert from './convert.js'; //返回结果转为中文提示
@@ -51,20 +51,21 @@ Axios.interceptors.response.use(
         type: 'error'
       });
       return Promise.reject(res.data);
-    } else if(res.data.code ===403){
+    } else if(res.data.code === 423){
       res.data.message = convert(res.data.message);
       Message({
         showClose: true,
         message: '存在重复采集器',
         type: 'error'
       });
-      this.$notify({
+      Notification({
         title: '提示',
-        message: res.data.result.join(","),
+        message: res.data.result.rows.join(",")+"采集器重复",
         duration: 0,
         type: 'warning',
         position: 'bottom-right'
       });
+      return Promise.reject(res.data);
     }else if (res.data.code !== 200) {
       res.data.message = convert(res.data.message);
       Message({
@@ -74,7 +75,8 @@ Axios.interceptors.response.use(
       });
       return Promise.reject(res.data);
     }
-    res.data.message = convert(res.data.message);
-    return res.data;
+      res.data.message = convert(res.data.message);
+      return res.data;
+    
   });
 export default Axios;
