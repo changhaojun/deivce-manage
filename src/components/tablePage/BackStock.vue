@@ -6,6 +6,9 @@
                 <el-option :label="item.fault_name" :value="item._id" v-for="(item,index) in faultList" :key="index"></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="备注：" label-width="100px">
+                <el-input   type="textarea" placeholder="请输入内容" v-model="OutOrBackStockParams.remark">  </el-input>
+            </el-form-item>
           </el-form> 
            <div slot="footer" class="dialog-footer">
             <el-button @click="Cancel">取 消</el-button>
@@ -22,10 +25,13 @@ export default {
         return{
             faultList:[],
             OutOrBackStockParams:{ //出库或者退库参数
-                customer_id:this.item.customer_id,
+                // customer_id:this.item.customer_id,
+                collector_id:[this.item.collector_id],
                 type:"backstock",
                 fault_id:"",
-                user_id:sessionStorage.getItem('user_id')
+                remark:"",
+                user_id:sessionStorage.getItem('user_id'),
+                user_name:sessionStorage.getItem('fullname')
             },
         }
     },
@@ -35,10 +41,10 @@ export default {
             const {result} = await this.$http('fault');
             this.faultList = result.rows;
         },
-        //确定出库
+        //确定退库
         async SureBackStock(){
             if(this.OutOrBackStockParams.fault_id){
-                const {result} = await this.$http.put('devices/'+this.item._id,this.OutOrBackStockParams);
+                const {result} = await this.$http.put('devices',this.OutOrBackStockParams);
                 this.$message({
                     message: '成功退库',
                     type: 'success'
@@ -60,6 +66,12 @@ export default {
             this.initData()
         },
     },
+    watch:{
+        item(val){
+            this.OutOrBackStockParams.collector_id = [];
+            this.OutOrBackStockParams.collector_id.push(val.collector_id);
+        }
+    },
     created(){
         this.getFault()
     }
@@ -68,6 +80,9 @@ export default {
 <style lang="scss" scoped>
 .back-stock{
     margin-top:20px;
+    .el-textarea,.el-select{
+        width:60%;
+    }
     .dialog-footer{
         text-align: right;
     }

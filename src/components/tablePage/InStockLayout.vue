@@ -117,7 +117,8 @@ methods:{
                 message: '请完善信息', 
                 type: 'warning'
             }) 
-        }else{
+        }else{       
+            this.inStock.collector_id = this.inStock.collector_id.length ?  this.inStock.collector_id : JSON.stringify(this.inStock.collector_id);//当返回重复id时，需要转成字符串
             if(this.inStock.collector_id.length !== 8 || itemReg.test(this.inStock.collector_id)){
                 this.$message({
                     message: 'Box编号长度或者格式不正确', 
