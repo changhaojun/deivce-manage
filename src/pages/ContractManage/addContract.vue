@@ -45,7 +45,7 @@ export default {
                 pact_number:this.itemData.pact_number?this.itemData.pact_number:"",
                 collector_amount:this.itemData.collector_amount?this.itemData.collector_amount:"",
                 signing_date:this.itemData.signing_date?this.itemData.signing_date:"",
-                signatory:this.itemData.signatory?this.itemData.signatory:"",
+                signatory:this.itemData.signatory?this.itemData.signatory:"", //签订人
                 items:this.itemData.items?this.itemData.items:"",
                 viability: this.itemData.viability?this.itemData.viability:"",
             }

@@ -46,8 +46,8 @@ export default {
         item(value){
             if(value.length){
                 for(const row of value){
-                    row.type = row.type === 'instock' ? '入库': row.type === 'outstock' ? '出库' : '退库';
-                    row.update =  moment(row.indate).format('YYYY-MM-DD hh:mm:ss');
+                    row.type = row.type === 'backstock' ? '退库': row.type === 'outstock' ? '出库' : row.type === 'test' ?'测试' : row.type === 'delete ' ?'删除':row.type === 'change' ?'替换出库':'入库';
+                    row.update =  moment(row.update).zone("+08:00").format("YYYY-MM-DD HH:mm:ss");   
                 }
             }
             this.item = value;
@@ -57,9 +57,13 @@ export default {
     }, 
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .view-path{
     height:300px;
+    width:100%;
+   .el-scrollbar .el-scrollbar__wrap{
+        overflow-x: hidden !important;
+    }
 }
 </style>
 

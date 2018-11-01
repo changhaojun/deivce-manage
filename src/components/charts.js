@@ -5,6 +5,7 @@ import 'echarts/lib/chart/pie';
 import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/legend';
 import 'echarts/lib/component/graphic';
+import router from '../router';
 const splitLine = {
     show: true,
     lineStyle: {
@@ -42,63 +43,28 @@ const grid = {
     top: '10%',
     containLabel: true
 };
-
-const myGraphic = [{
-    type: 'group',
-    // rotation: Math.PI / 4,
-    id: 'textGroup',
-    bounding: 'all',
-    top: 50,
-    right: 0,
-    z: 999999,
-    children: [{
-            type: 'rect',
-            left: 'center',
-            top: 'center',
-            z: 999999,
-            shape: {
-                width: 400,
-                height: 50
-            },
-            style: {
-                fill: 'rgba(0,0,0,0.3)'
-            }
-        },
-        {
-            type: 'text',
-            left: 'center',
-            top: 'center',
-            z: 999999,
-            style: {
-                fill: '#fff',
-                text: '北京智信远景--揽月云',
-                font: 'bold 26px Microsoft YaHei'
-            }
-        }
-    ]
-}]
 //柱状图
 export const barCharts = (el, dataX, dataY, legend, barColor) => {
-    const labelOption = {
-        normal: {
-            show: true,
-            position: 'insideBottom',
-            distance: 15,
-            align: 'left',
-            verticalAlign: 'middle',
-            rotate: 90,
-            formatter: '{name|{a}}  {c}',
-            fontSize: 16,
-            rich: {
-                name: {
-                    textBorderColor: '#fff'
-                }
-            }
-        }
-    };
-    dataY.forEach(item => {
-        item.label = labelOption;
-    });
+    // const labelOption = {
+    //     normal: {
+    //         show: true,
+    //         position: 'insideBottom',
+    //         distance: 15,
+    //         align: 'left',
+    //         verticalAlign: 'middle',
+    //         rotate: 90,
+    //         formatter: '{name|{a}}  {c}',
+    //         fontSize: 16,
+    //         rich: {
+    //             name: {
+    //                 textBorderColor: '#fff'
+    //             }
+    //         }
+    //     }
+    // };
+    // dataY.forEach(item => {
+    //     item.label = labelOption;
+    // });
     const barOption = {
         grid: grid,
         color: barColor,
@@ -123,7 +89,7 @@ export const barCharts = (el, dataX, dataY, legend, barColor) => {
                 formatter: '{value}'
             }
         },
-        graphic: myGraphic,
+        // graphic: myGraphic,
         series: dataY,
     };
     const bar = echarts.init(el);
@@ -247,12 +213,13 @@ export const lineBar = (el, dataX, dataY1, dataY2) => {
 };
 
 //饼图
-export const screenPie = (el, data, pieColor) => {
+export const screenPie = (el, data, pieColor,type) => {
     const w = document.body.clientWidth;
-    let len = w < 1200 ? 10 : 30;
-    let radius = w < 1200 ? ['50%', '74%'] : ['60%', '80%'];
+    console.log(w)
+    let len = w < 1366 ? 10 : 30;
+    let radius = w < 1366 ? ['45%', '60%'] : ['60%', '80%'];
     // const radius = [0, '62%']
-    let fz = w < 1200 ? 10 : 15;
+    let fz = w < 1366 ? 12 : 15;
     const colors = ['#b5b5b5', '#00d2eb', '#f2bf0f'];
     const screenPieOption = {
         tooltip: {
@@ -275,9 +242,13 @@ export const screenPie = (el, data, pieColor) => {
                 fontSize: fz
             }
         }],
-        // color: pieColor 
     };
     const pie = echarts.init(el);
     pie.setOption(screenPieOption);
+    pie.on('click',(param)=>{
+        if(type){
+            router.push({path: '/expireManage',query:param.data});
+        }
+    })
     return pie;
 };

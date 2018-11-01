@@ -119,10 +119,11 @@ export default {
                     this.$emit("getTypeList");
                 }
             }else{//替换出库条件
+                const reg = /\D/;
                 this.OutOrBackStockParams.type = 'change';
-                if(this.OutOrBackStockParams.replace_collector === ''){
+                if(this.OutOrBackStockParams.replace_collector === '' || this.OutOrBackStockParams.replace_collector.length !==8 || reg.test(this.OutOrBackStockParams.replace_collector)){
                     this.$message({
-                        message: '请完善替换出库信息',
+                        message: '请完善替换出库信息(或检查信息是否正确)',
                         type: 'warning'
                     })
                 }else{

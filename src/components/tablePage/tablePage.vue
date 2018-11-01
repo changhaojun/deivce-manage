@@ -112,7 +112,7 @@
             </div>
             <!-- 删除库存 -->
             <div v-if="dialogData.type === 4">
-                <span class="deleteStock">确定删除库存 -
+                <span class="deleteStock">确定删除采集器 -
                     <span class="colName">{{itemDevicesData.collector_id}}</span>
                 </span>
                 <div slot="footer" class="dialog-footer">
