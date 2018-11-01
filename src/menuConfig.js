@@ -35,6 +35,12 @@ const asideMenuConfig = [
     // icon: 'el-icon-edit-outline',
     icon: 'iconfont icon-kucun'
   },
+  {
+    path: '/expireManage',
+    name: '服务到期管理',
+    // icon: 'el-icon-edit-outline',
+    icon: 'iconfont icon-kucun'
+  },
 ];
 
 export { headerMenuConfig, asideMenuConfig };

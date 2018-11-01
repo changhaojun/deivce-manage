@@ -11,7 +11,7 @@ import BoxTypeList from './pages/BoxTypeList';
 import Devices from './pages/Devices';
 import StockManage from './pages/Stockmanage';
 import ContractManage from './pages/ContractManage';
-
+import ServicesExpire from './pages/ServiceExpire';
 const routerConfig = [
   {
     path: '/',
@@ -42,6 +42,11 @@ const routerConfig = [
     path: '/contractManage',
     layout: HeaderAsideLayout,
     component: ContractManage,
+  },
+  {
+    path: '/expireManage',
+    layout: HeaderAsideLayout,
+    component: ServicesExpire,
   },
 ];
 
