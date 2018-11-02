@@ -33,13 +33,13 @@ const asideMenuConfig = [
     path: '/contractManage',
     name: '合同管理',
     // icon: 'el-icon-edit-outline',
-    icon: 'iconfont icon-kucun'
+    icon: 'iconfont icon-hetongguanli-'
   },
   {
     path: '/expireManage',
     name: '服务到期管理',
     // icon: 'el-icon-edit-outline',
-    icon: 'iconfont icon-kucun'
+    icon: 'iconfont icon-fu-wu-guan-li'
   },
 ];
 

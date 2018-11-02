@@ -68,7 +68,7 @@ export const barCharts = (el, dataX, dataY, legend, barColor) => {
     const barOption = {
         grid: grid,
         color: barColor,
-        tooltip: {
+        tooltip: { 
             trigger: 'axis',
             axisPointer: {
                 type: 'shadow'
@@ -89,8 +89,7 @@ export const barCharts = (el, dataX, dataY, legend, barColor) => {
                 formatter: '{value}'
             }
         },
-        // graphic: myGraphic,
-        series: dataY,
+        series:dataY
     };
     const bar = echarts.init(el);
     bar.setOption(barOption);
@@ -107,40 +106,29 @@ export const barCharts = (el, dataX, dataY, legend, barColor) => {
 };
 
 //折线图
-export const lineCharts = (el, dataX, dataY) => {
+export const lineCharts = (el, dataX, dataY,legend) => {
     const lineOption = {
         grid: grid,
-        xAxis: {
-            data: dataX,
-            axisLine: {
-                lineStyle: lineStyle
-            },
-            type: 'category',
-            splitLine: splitLine
+        tooltip: {
+            trigger: 'axis',
         },
-        yAxis: {
-            splitLine: splitLine,
-            axisLine: {
-                lineStyle: lineStyle
+        toolbox: {
+            feature: {
+                saveAsImage: {}
             }
         },
-        series: [{
-            type: 'line',
-            data: dataY,
-            symbol: 'circle',
-            symbolSize: 10,
-            itemStyle: {
-                normal: {
-                    color: '#01bdda',
-                    radius: 20,
-                    lineStyle: {
-                        color: '#3d779f',
-                        width: 3
-                    }
-                }
-            },
-            areaStyle: areaStyle
-        }]
+        legend: {
+            data: legend
+        },
+        xAxis: {
+            data: dataX,
+            type: 'category', 
+            boundaryGap: false,
+        },
+        yAxis: { 
+            type: 'value',
+        },
+        series:dataY
     };
     const lineCharts = echarts.init(el);
     lineCharts.setOption(lineOption);
@@ -227,6 +215,7 @@ export const screenPie = (el, data, pieColor,type) => {
             trigger: 'item',
             formatter: "{b}: {c} ({d}%)"
         },
+        grid: grid,
         series: [{
             type: 'pie',
             center: ['50%', '50%'],

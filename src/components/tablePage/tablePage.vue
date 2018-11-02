@@ -2,7 +2,7 @@
     <div class="table-page">
         <mu-button class="instock" fab small @click="inStock" v-if="manager">入库</mu-button>
         <mu-button class="export" fab small @click='export2Excel'>导出</mu-button>
-        <div class="searc-filter">
+        <div class="searc-filter"  @keydown.enter="search">
             <mu-form :model="conditions" label-position="top" label-width="100">
                 <el-row :gutter="20">
                     <el-col :span="4">
@@ -107,7 +107,7 @@
             <!-- 查看轨迹 -->
             <div v-if="dialogData.type === 3" style="height:300px">
                 <!-- <el-scrollbar style="height:100%"> -->
-                    <view-path v-on:Cancel="Cancel" :item.sync="itemDevicesData"></view-path>
+                    <view-path v-on:Cancel="Cancel" :item.sync="itemDevicesData" :itemDetail.sync="detailData"></view-path>
                 <!-- </el-scrollbar> -->
             </div>
             <!-- 删除库存 -->
@@ -207,26 +207,6 @@ export default {
                 {
                     label: "检测状态",
                     prop: "test_result"
-                },
-                {
-                    label: "PCB厂家",
-                    prop: "PCB_name"
-                },
-                {
-                    label: "通讯模块供应商",
-                    prop: "CM_name"
-                },
-                {
-                    label: "元器件供应商",
-                    prop: "CAP_name"
-                },
-                {
-                    label: "SIM供应商",
-                    prop: "SIM_name"
-                },
-                {
-                    label: "焊接厂家",
-                    prop: "weld_name"
                 }
             ],
             deleteIndex: null,
@@ -237,15 +217,21 @@ export default {
                 collector_id:[],
                 user_id:sessionStorage.getItem('user_id'),
                 user_name:sessionStorage.getItem('fullname')
-            }
+            },
+            detailData:null,
         }
     },
     methods: {
         search() {
             this.page_number = 1;
+            if(this.conditions.date.start_time !== ""|| this.conditions.date.end_time !== ""){
+               this.conditions.date.start_time =moment(this.conditions.date.start_time).format().split('T')[0]+"T00:00:00.000Z";
+               this.conditions.date.end_time =moment(this.conditions.date.end_time).add(1, 'days').format().split('T')[0]+"T00:00:00.000Z";
+            }
             this.getData();
         },
         reset() {
+            this.page_number = 1;
             this.conditions.like.collector_id = '';
             this.conditions.like.customer_name = '';
             this.conditions.like.collector_model = '';
@@ -378,14 +364,14 @@ export default {
             this.dialogData.type = 2;
             this.dialogData.dialogWidth = '500px';
             this.itemDevicesData = row;
-            // if (this.initData.datas[index].type === '已出库') {
+            if (this.initData.datas[index].stock_status === '已出库') {
                 this.showDialog();
-            // } else {
-            //     this.$message({
-            //         message: '请先出库',
-            //         type: 'warning'
-            //     })
-            // }
+            } else {
+                this.$message({
+                    message: '请先出库',
+                    type: 'warning'
+                })
+            }
         },
         //删除
         deleteStock(index, row) {        
@@ -426,6 +412,7 @@ export default {
         async getDevicesPath(item) {
             const { result } = await this.$http('deviceTrack', { data: { collector_id: item.collector_id } });
             this.itemDevicesData = result.rows;
+            this.detailData = item;
         },
         formatJson(filterVal, jsonData) {
             return jsonData.map(v => filterVal.map(j => v[j]))

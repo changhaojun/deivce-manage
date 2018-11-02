@@ -1,7 +1,7 @@
 <template>
     <div class="contract-manage">
         <mu-button class="instock" fab small @click="addContract">添加</mu-button>
-        <div class="searc-filter">
+        <div class="searc-filter" @keydown.enter="search">
             <mu-form :model="params" label-position="top" label-width="100">
                 <el-row :gutter="20">
                     <el-col :span="4">
@@ -14,12 +14,6 @@
                             <mu-text-field v-model="params.like.signatory" placeholder="请输入内容"></mu-text-field>
                         </mu-form-item>
                     </el-col>    
-               
-                    <el-col :span="4">
-                        <mu-form-item label="签订日期">
-                            <mu-date-input v-model="params.like.signing_date" label-float full-width></mu-date-input>
-                        </mu-form-item>
-                    </el-col>
                     <el-col :span="6" class="form-buttons">
                         <mu-form-item>
                             <mu-button color="primary" @click="search">搜索</mu-button>
@@ -95,7 +89,6 @@ export default {
             params:{
                 like:{
                     pact_number: "",
-                    signing_date: "",
                     signatory: ''
                 },
                 page_size: 10,
@@ -107,7 +100,7 @@ export default {
     },
     methods: {
         async getContract() {
-            const { result } = await this.$http("pact")
+            const { result } = await this.$http("pact",{data:this.params})
             for(const row of result.rows){
                row.signing_date && (row.signing_date = row.signing_date.split('T')[0]); 
             }
@@ -140,8 +133,8 @@ export default {
         },
         reset(){
             this.params.like.pact_number = '';
-            this.params.like.signing_date = '';
             this.params.like.signatory = '';
+            this.getContract();
         },
         search(){
             this.getContract();
