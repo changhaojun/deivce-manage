@@ -226,7 +226,7 @@ export default {
             this.page_number = 1;
             if(this.conditions.date.start_time !== ""|| this.conditions.date.end_time !== ""){
                this.conditions.date.start_time =moment(this.conditions.date.start_time).format().split('T')[0]+"T00:00:00.000Z";
-               this.conditions.date.end_time =moment(this.conditions.date.end_time).add(1, 'days').format().split('T')[0]+"T00:00:00.000Z";
+               this.conditions.date.end_time =moment(this.conditions.date.end_time).format().split('T')[0]+"T15:59:59.000Z";
             }
             this.getData();
         },
