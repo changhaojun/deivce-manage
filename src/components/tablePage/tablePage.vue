@@ -1,10 +1,10 @@
 <template>
     <div class="table-page">
         <mu-button class="instock" fab small @click="inStock" v-if="manager">入库</mu-button>
-        <mu-button class="export" fab small @click='export2Excel'>导出</mu-button>
+        <!-- <mu-button class="export" fab small @click='export2Excel'>导出</mu-button> -->
         <div class="searc-filter"  @keydown.enter="search">
             <mu-form :model="conditions" label-position="top" label-width="100">
-                <el-row :gutter="20">
+                <el-row :gutter="30">
                     <el-col :span="4">
                         <mu-form-item label="采集器ID">
                             <mu-text-field v-model="conditions.like.collector_id"></mu-text-field>
@@ -26,23 +26,7 @@
                                 <mu-option v-for="item in checkOptions" :key="item.num" :label="item.label" :value="item.num"></mu-option>
                             </mu-select>
                         </mu-form-item>
-                    </el-col>
-                    <el-col :span="4">
-                        <mu-form-item label="库存状态">
-                            <mu-select v-model="conditions.filter.stock_status" filterable placeholder="请选择" full-width>
-                                <mu-option v-for="item in stcokOptions" :key="item.value" :label="item.label" :value="item.value"></mu-option>
-                            </mu-select>
-                        </mu-form-item>
-                    </el-col>
-                    <el-col :span="4">
-                        <mu-form-item label="启停状态">
-                            <mu-select v-model="conditions.filter.status" filterable placeholder="请选择" full-width>
-                                <mu-option v-for="item in statusOptions" :key="item.num" :label="item.label" :value="item.num"></mu-option>
-                            </mu-select>
-                        </mu-form-item>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="20">
+                    </el-col>    
                     <el-col :span="4">
                         <mu-form-item label="开始时间">
                             <mu-date-input v-model="conditions.date.start_time" label-float full-width></mu-date-input>
@@ -52,8 +36,25 @@
                         <mu-form-item label="结束时间">
                             <mu-date-input v-model="conditions.date.end_time" label-float full-width></mu-date-input>
                         </mu-form-item>
+                    </el-col>            
+                    <!-- <el-col :span="4">
+                        <mu-form-item label="启停状态">
+                            <mu-select v-model="conditions.filter.status" filterable placeholder="请选择" full-width>
+                                <mu-option v-for="item in statusOptions" :key="item.num" :label="item.label" :value="item.num"></mu-option>
+                            </mu-select>
+                        </mu-form-item>
+                    </el-col> -->
+                </el-row>
+                <el-row :gutter="20">
+                     <el-col :span="4">
+                        <mu-form-item label="库存状态">
+                            <mu-select v-model="conditions.filter.stock_status" filterable placeholder="请选择" full-width>
+                                <mu-option v-for="item in stcokOptions" :key="item.value" :label="item.label" :value="item.value"></mu-option>
+                            </mu-select>
+                        </mu-form-item>
                     </el-col>
-                    <el-col :span="10" class="form-buttons">
+                    
+                    <el-col :span="8" class="form-buttons">
                         <mu-form-item>
                             <mu-button color="primary" @click="search">搜索</mu-button>
                             <mu-button color="warning" @click="reset">重置</mu-button>
@@ -66,7 +67,7 @@
         <div class="content">
             <el-table :data="initData.datas" style="width:100%;margin-bottom:30px" ref="multipleTable" @selection-change="handleSelectionChange">
             <!-- <el-table :data="initData.datas" style="width:100%;margin-bottom:30px" ref="multipleTable"  v-if="manager"> -->
-                <el-table-column type="selection" width="55"></el-table-column>
+                <el-table-column type="selection" width="35"></el-table-column>
                 <el-table-column :prop='item.prop' min-width="120" :label='item.label' v-for="item in columns" :key="item.index">
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" :width="buttonBoxWidth" class-name="edit-buttons">
@@ -147,8 +148,7 @@ export default {
                 },
                 filter: {
                     check_result: '',
-                    stock_status: '',
-                    status: ''
+                    stock_status: ''
                 },
                 date: {
                     start_time: '',
@@ -292,7 +292,7 @@ export default {
         },
         calculateBox() {
             if (this.manager) {
-                this.buttonBoxWidth = 300;
+                this.buttonBoxWidth = 290;
             } else {
                 this.buttonBoxWidth = 80;
             }
@@ -414,23 +414,23 @@ export default {
             this.itemDevicesData = result.rows;
             this.detailData = item;
         },
-        formatJson(filterVal, jsonData) {
-            return jsonData.map(v => filterVal.map(j => v[j]))
-        },
-        export2Excel() {
-            require.ensure([], () => {                       //这里的require的路径要写对，不然运行会有错误	    　　　　　　
-                const { export_json_to_excel } = require('@/vendor/Export2Excel');
-                const tHeader = [];
-                const filterVal = [];
-                for (let i = 0; i < this.columns.length; i++) {
-                    tHeader.push(this.columns[i].label);
-                    filterVal.push(this.columns[i].prop);
-                }
-                const list = this.initData.datas;
-                const data = this.formatJson(filterVal, list);
-                export_json_to_excel(tHeader, data, '设备库存管理');
-            })
-        },
+        // formatJson(filterVal, jsonData) {
+        //     return jsonData.map(v => filterVal.map(j => v[j]))
+        // },
+        // export2Excel() {
+        //     require.ensure([], () => {                       //这里的require的路径要写对，不然运行会有错误	    　　　　　　
+        //         const { export_json_to_excel } = require('@/vendor/Export2Excel');
+        //         const tHeader = [];
+        //         const filterVal = [];
+        //         for (let i = 0; i < this.columns.length; i++) {
+        //             tHeader.push(this.columns[i].label);
+        //             filterVal.push(this.columns[i].prop);
+        //         }
+        //         const list = this.initData.datas;
+        //         const data = this.formatJson(filterVal, list);
+        //         export_json_to_excel(tHeader, data, '设备库存管理');
+        //     })
+        // },
         handleSizeChange(val){
             this.page_size = val;
             this.getData();
@@ -457,7 +457,7 @@ export default {
 .table-page {
   width: 100%;
   height: 100%;
-  padding: 20px;
+  padding-top: 20px;
   .searc-filter {
     margin: 50px 20px 20px 20px;
     padding: 10px 20px;
@@ -485,7 +485,7 @@ export default {
           padding-left: 10px;
           &.edit-buttons {
             button {
-              margin-right: 10px;
+              margin-right: 7px;
             }
           }
         }

@@ -99,8 +99,11 @@ export default {
     
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .add-contract{
+    .el-form-item{
+      margin-bottom:10px;
+    }
     .dialog-footer{
         text-align:right
     }

@@ -1,7 +1,7 @@
 <template>
     <div class="service-expire">
        <div class="header">
-           <mu-button color="primary" :flat="!(activeIndex === index)" @click="activeClick(item.prop,index,allData)" v-for="(item,index) in activeButton" :key="index">{{item.label}}</mu-button>
+           <mu-button color="primary" :flat="!(activeIndex === index)" @click="activeClick(item.prop,index)" v-for="(item,index) in activeButton" :key="index">{{item.label}}</mu-button>
        </div>
        <div class="content">
         <el-table :data="selectedData" style="width:100%;margin-bottom:30px;padding:0 20px">
@@ -18,6 +18,7 @@ export default {
     data(){
         return{
             activeIndex:0,
+            label:"",
             activeButton:[
                 {
                     label:"1个月以内",
@@ -41,60 +42,65 @@ export default {
             columns:[
                 {
                     label:"采集器ID",
-                    prop:"collector_id"
+                    prop:"collector_id",
+           
                 },
                 {
                     label:"到期时间",
-                    prop:"validity"
+                    prop:"validity",
+           
                 },
                 {
                     label:"库存状态",
-                    prop:"stock_status"
+                    prop:"type"
                 },
                 {
                     label:"BOX型号",
                     prop:"collector_model"
+           
                 },
                 {
                     label:"所属客户",
-                    prop:"customer_name"
+                    prop:"customer_name",
+                  
                 },
             ],
 
         }
     },
     methods:{
-        async getSevicesExpire(callBack){
+        async getSevicesExpire(){
              const {result} = await this.$http('datas/expireCount');
              this.allData = result.rows;
-             callBack && callBack(); 
+            this.initButton()
         },
-        activeClick(name,index,allData){
+        activeClick(name,index){
             this.activeIndex = index
-            allData.forEach((Item)=>{
-                if(name === Item.name){
+            this.allData.forEach((Item)=>{
+                 Item.item.forEach((items)=>{
+                    items.validity = items.validity.split('T')[0];
+                    items.type = ((items.stock_status === 1)? '已出库' : "未出库");
+                })
+                if(name === Item.name){                    
                     this.selectedData = Item.item;
-                    Item.item.forEach((items)=>{
-                        items.validity = items.validity.split('T')[0];
-                        items.stock_status =( items.stock_status === 1 ? '已出库' : "未出库");
-                    })
-                }
+                }  
             })
-        }
-    },
-    created(){
-        this.getSevicesExpire(()=>{
+        },
+       async initButton(){
             if(Object.keys(this.$route.query).length){
                 this.activeButton.forEach((item,index)=>{
                     if(this.$route.query.type === item.prop){
-                        this.activeClick(this.$route.query.type,index,this.allData)
+                       this.activeClick(this.$route.query.type,index)
                     }
                     return false;
                 })          
             }else{
-                this.activeClick("one",0,this.allData)
+               this.activeClick("one",0)
             } 
-        });     
+        }
+    },
+    created(){
+        this.getSevicesExpire();     
              
     }
 }

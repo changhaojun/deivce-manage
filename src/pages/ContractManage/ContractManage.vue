@@ -175,6 +175,12 @@ export default {
      padding-top: 15px;
     }
   }
+  .el-dialog{
+    .el-dialog__body{
+        padding-top:10px;
+        padding-bottom: 20px;
+    }
+  }
 }
 </style>
 
