@@ -71,13 +71,13 @@ export default {
         },
         activeClick(name,index,allData){
             this.activeIndex = index
-            allData.forEach((item)=>{
-                item.item.forEach((items)=>{
-                     items.validity = items.validity.split('T')[0];
-                     items.stock_status = items.stock_status === 1 ? '已出库' : "未出库";
-                 })
-                if(name === item.name){
-                    this.selectedData = item.item;
+            allData.forEach((Item)=>{
+                if(name === Item.name){
+                    this.selectedData = Item.item;
+                    Item.item.forEach((items)=>{
+                        items.validity = items.validity.split('T')[0];
+                        items.stock_status =( items.stock_status === 1 ? '已出库' : "未出库");
+                    })
                 }
             })
         }
