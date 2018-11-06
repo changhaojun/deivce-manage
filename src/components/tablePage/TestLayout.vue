@@ -32,8 +32,8 @@ export default {
         return{
             params: {
                 check_result:this.item.check_result >= 2 ? "" : this.item.check_result,
-                fault_id:"",
-                SIM:"",
+                fault_id:this.item.fault_id?this.item.fault_id:"",
+                SIM:this.item.SIM?this.item.SIM:"",
                 remark:"", 
                 type:"test",
                 collector_id:[this.item.collector_id],
@@ -99,6 +99,8 @@ export default {
         item(val){
             this.params.collector_id = [];
             this.params.check_result = (val.check_result >= 2 ? "" :val.check_result);
+            this.params.SIM = (val.SIM ? val.SIM :"");
+            this.params.fault_id = (val.fault_id ? val.fault_id :"" )
             this.params.collector_id.push(val.collector_id);
         }
     },

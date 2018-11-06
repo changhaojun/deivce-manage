@@ -15,7 +15,7 @@
                     <div class="detailList"><span class="label">所属客户：</span><span>{{itemDetail.customer_name}}</span></div>
                     <div class="detailList"><span class="label">入库时间：</span><span>{{itemDetail.indate}}</span></div>
                     <div class="detailList"><span class="label">库存状态：</span><span>{{itemDetail.stock_status}}</span></div>
-                    <div class="detailList"><span class="label">检测状态：</span><span>{{itemDetail.check_result===3?"维修中":itemDetail.check_result===2?"未检测":itemDetail.check_result}}</span></div>    
+                    <div class="detailList"><span class="label">检测状态：</span><span>{{itemDetail.check_result===3?"维修中":itemDetail.check_result===2?"未检测":itemDetail.check_result===1?"合格":"不合格"}}</span></div>    
                     <div class="detailList"><span class="label">SIM供应商：</span><span>{{itemDetail.SIM_name}}</span></div>
                     <div class="detailList"><span class="label">焊接厂家：</span><span>{{itemDetail.weld_name}}</span></div>
                     <div class="detailList"><span class="label">PCB厂家</span>{{itemDetail.PCB_name}}<span></span></div>
@@ -53,8 +53,12 @@ export default {
                     key: 'customer_name'
                 },
                 {
-                    title: '原因',
-                    key: 'fault_name'
+                   title: '原因',
+                    key: 'fault_name' 
+                },
+                {
+                    title: '备注',
+                    key: 'remark'
                 },
             ],
             item:this.item,
@@ -68,8 +72,8 @@ export default {
             this.outStockType ="history"
             if(value.length){
                 for(const row of value){
-                    row.type = row.type === 'backstock' ? '退库': row.type === 'outstock' ? '出库' : row.type === 'test' ?'测试' : row.type === 'delete ' ?'删除':row.type === 'change' ?'替换出库':'入库';
-                    row.update =  moment(row.update).zone("+08:00").format("YYYY-MM-DD HH:mm:ss");   
+                    row.type = row.type === 'backstock' ? '退库': row.type === 'outstock' ? '出库' : row.type === 'test' ?'测试' : row.type === 'delete' ?'删除':row.type === 'change' ?'替换出库':'入库';
+                    row.update =  moment(row.update).zone("+08:00").format("YYYY-MM-DD HH:mm:ss");  
                 }
             }
             this.item = value;

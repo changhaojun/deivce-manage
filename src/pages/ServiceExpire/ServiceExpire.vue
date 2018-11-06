@@ -1,6 +1,24 @@
 <template>
     <div class="service-expire">
-       <div class="header">
+       
+        <div class="searc-filter" @keydown.enter="Search">
+            <mu-form :model="params" label-position="top" label-width="100">
+                <el-row :gutter="20">
+                    <el-col :span="4">
+                        <mu-form-item label="所属客户">
+                            <mu-text-field  v-model="params.like.customer_name" placeholder="请输入内容"></mu-text-field>
+                        </mu-form-item>
+                    </el-col>  
+                    <el-col :span="6" class="form-buttons">
+                        <mu-form-item>
+                            <mu-button color="primary" @click="Search">搜索</mu-button>
+                            <mu-button color="warning" @click="reset">重置</mu-button>
+                        </mu-form-item>
+                    </el-col>
+                </el-row>
+            </mu-form>
+        </div>
+        <div class="header">
            <mu-button color="primary" :flat="!(activeIndex === index)" @click="activeClick(item.prop,index)" v-for="(item,index) in activeButton" :key="index">{{item.label}}</mu-button>
        </div>
        <div class="content">
@@ -19,6 +37,11 @@ export default {
         return{
             activeIndex:0,
             label:"",
+            params:{
+                like:{
+                    customer_name:""
+                }
+            },
             activeButton:[
                 {
                     label:"1个月以内",
@@ -39,6 +62,7 @@ export default {
             ],
             allData:[],
             selectedData:[],
+            copySelectedData:[],
             columns:[
                 {
                     label:"采集器ID",
@@ -82,7 +106,7 @@ export default {
                     items.type = ((items.stock_status === 1)? '已出库' : "未出库");
                 })
                 if(name === Item.name){                    
-                    this.selectedData = Item.item;
+                    this.copySelectedData = this.selectedData = Item.item;
                 }  
             })
         },
@@ -97,6 +121,23 @@ export default {
             }else{
                this.activeClick("one",0)
             } 
+        },
+        Search(){
+            this.selectedData = this.copySelectedData ;
+            const arr = [];
+            this.selectedData.forEach((item)=>{
+                if(item.customer_name){
+                    if(item.customer_name.search(this.params.like.customer_name)!==-1){
+                        arr.push(item);
+                    }
+                }
+               
+            })
+            this.selectedData = arr;
+        },
+        reset(){
+            this.params.like.customer_name = "";
+            this.selectedData = this.copySelectedData ;
         }
     },
     created(){
@@ -110,7 +151,12 @@ export default {
         margin:20px 20px;
         width:calc(100% - 40px);
         border-radius: 3px;
-       
+       .searc-filter{
+           background:#fff;
+           padding-left:20px;
+           padding-top:20px;
+           margin-bottom:20px;
+       }
         .header{
             height:80px;
             width:100%;

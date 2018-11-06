@@ -1,6 +1,6 @@
 <template>
     <div class="table-page">
-        <mu-button class="instock" fab small @click="inStock" v-if="manager">入库</mu-button>
+        
         <!-- <mu-button class="export" fab small @click='export2Excel'>导出</mu-button> -->
         <div class="searc-filter"  @keydown.enter="search">
             <mu-form :model="conditions" label-position="top" label-width="100">
@@ -65,10 +65,14 @@
             </mu-form>
         </div>
         <div class="content">
+            <div class="title">
+                <span class="titleText">设备列表</span>
+                <mu-button class="instock" color="primary" @click="inStock" v-if="manager">入库</mu-button>
+            </div>
             <el-table :data="initData.datas" style="width:100%;margin-bottom:30px" ref="multipleTable" @selection-change="handleSelectionChange">
             <!-- <el-table :data="initData.datas" style="width:100%;margin-bottom:30px" ref="multipleTable"  v-if="manager"> -->
-                <el-table-column type="selection" width="35"></el-table-column>
-                <el-table-column :prop='item.prop' min-width="120" :label='item.label' v-for="item in columns" :key="item.index">
+                <el-table-column type="selection" width="45"></el-table-column>
+                <el-table-column :prop='item.prop' min-width="110" :label='item.label' v-for="item in columns" :key="item.index">
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" :width="buttonBoxWidth" class-name="edit-buttons">
                     <template slot-scope="scope">
@@ -319,13 +323,13 @@ export default {
                    if(item.test_result === '合格'){
                        checkedLen++;
                    }
-                   if(item.stock_status === '已出库'){
-                       outstockLen++;
-                   }
+                //    if(item.stock_status === '已出库'){
+                //        outstockLen++;
+                //    }
                 })
                 if(checkedLen !== row.length || outstockLen !== 0 ){ //是否所有都合格
                     this.$message({
-                        message: '请检查是否所选都合格或者已出库，不合格、已出库不能出库',
+                        message: '请检查是否所选都合格，不合格不能出库',
                         type: 'warning'
                     })
                 }else{ 
@@ -337,13 +341,8 @@ export default {
                         message: '请先测试，合格之后才能出库',
                         type: 'warning'
                     })
-                }else if( row.stock_status === '已出库'){
-                    this.$message({
-                        message: "已经出库了，不能重复出库",
-                        type: 'warning'
-                    })
                 }else{
-                     this.OutVar(row, batch);
+                    this.OutVar(row, batch);
                 }
             }  
         },
@@ -457,9 +456,8 @@ export default {
 .table-page {
   width: 100%;
   height: 100%;
-  padding-top: 20px;
   .searc-filter {
-    margin: 50px 20px 20px 20px;
+    margin: 20px 20px 20px 20px;
     padding: 10px 20px;
     border: 1px solid #eee;
     border-radius: 6px;
@@ -470,6 +468,16 @@ export default {
   }
   .content {
     margin: 20px;
+    .title{
+        height:60px;
+        line-height: 40px;
+        display: flex;
+        justify-content: space-between;
+        .titleText{
+            margin-left:10px;
+            font-size: 20px;
+        }
+    }
     .el-table {
       .mu-raised-button {
         min-width: 43px;
@@ -489,6 +497,7 @@ export default {
             }
           }
         }
+        
       }
     }
   }
@@ -498,8 +507,7 @@ export default {
     margin-right: 20px;
   }
   .instock {
-    float: left;
-    margin-left: 20px;
+   margin-right: 10px;
   }
   .dialog-footer {
     margin-top: 20px;
