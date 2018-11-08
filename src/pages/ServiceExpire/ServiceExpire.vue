@@ -123,21 +123,22 @@ export default {
             } 
         },
         Search(){
-            this.selectedData = this.copySelectedData ;
             const arr = [];
-            this.selectedData.forEach((item)=>{
-                if(item.customer_name){
-                    if(item.customer_name.search(this.params.like.customer_name)!==-1){
-                        arr.push(item);
+            this.allData.forEach((item)=>{
+                item.item.forEach((items)=>{
+                    if(items.customer_name){
+                        if(items.customer_name.search(this.params.like.customer_name)!==-1){
+                            arr.push(items);
+                        }
                     }
-                }
-               
+                })   
             })
             this.selectedData = arr;
+             this.activeClick("",-1);
         },
         reset(){
             this.params.like.customer_name = "";
-            this.selectedData = this.copySelectedData ;
+            this.activeClick("one",0);
         }
     },
     created(){

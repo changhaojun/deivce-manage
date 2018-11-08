@@ -204,10 +204,10 @@ export const lineBar = (el, dataX, dataY1, dataY2) => {
 export const screenPie = (el, data, pieColor,type) => {
     const w = document.body.clientWidth;
     console.log(w)
-    let len = w < 1366 ? 10 : 30;
-    let radius = w < 1366 ? ['45%', '60%'] : ['60%', '80%'];
+    let len = w < 1366 ? 10 : 10;
+    let radius = w < 1366 ? ['45%', '60%'] : ['45%', '60%'];
     // const radius = [0, '62%']
-    let fz = w < 1366 ? 12 : 15;
+    let fz = w < 1366 ? 12 : 13;
     const colors = ['#b5b5b5', '#00d2eb', '#f2bf0f'];
     const screenPieOption = {
         tooltip: {
