@@ -155,8 +155,10 @@ export default {
        .searc-filter{
            background:#fff;
            padding-left:20px;
-           padding-top:20px;
            margin-bottom:20px;
+           .mu-button{
+               margin-top:20px;
+           }  
        }
         .header{
             height:80px;
