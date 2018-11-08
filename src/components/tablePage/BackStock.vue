@@ -11,10 +11,9 @@
             </el-form-item>
           </el-form> 
            <div slot="footer" class="dialog-footer">
-            <el-button @click="Cancel">取 消</el-button>
-            <el-button type="primary" @click="SureBackStock">确 定</el-button>
+                <mu-button @click="Cancel" flat class="cancel" normal>取 消</mu-button>
+                <mu-button color="primary" @click="SureBackStock" normal>确 定</mu-button>
           </div> 
-
     </div>
 </template>
 <script>
@@ -85,6 +84,13 @@ export default {
     }
     .dialog-footer{
         text-align: right;
+        .mu-button{
+            margin-right:10px;
+        }
+        .cancel{
+            border:1px solid #ccc
+        }
+
     }
 }
 </style>

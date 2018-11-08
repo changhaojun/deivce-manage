@@ -21,6 +21,7 @@
                     <div class="detailList"><span class="label">PCB厂家</span>{{itemDetail.PCB_name}}<span></span></div>
                     <div class="detailList"><span class="label">元器件供应商：</span><span>{{itemDetail.CAP_name}}</span></div>
                     <div class="detailList"><span class="label">通讯模块供应商：</span><span>{{itemDetail.CM_name}}</span></div>
+                    <div class="detailList"><span class="label">SIM卡号：</span><span>{{itemDetail.SIM}}</span></div>
                 </el-scrollbar>
             </el-tab-pane>
         </el-tabs>
@@ -57,6 +58,10 @@ export default {
                     key: 'fault_name' 
                 },
                 {
+                   title: '出库系统',
+                    key: 'outSystem' 
+                },
+                {
                     title: '备注',
                     key: 'remark'
                 },
@@ -72,7 +77,8 @@ export default {
             this.outStockType ="history"
             if(value.length){
                 for(const row of value){
-                    row.type = row.type === 'backstock' ? '退库': row.type === 'outstock' ? '出库' : row.type === 'test' ?'测试' : row.type === 'delete' ?'删除':row.type === 'change' ?'替换出库':'入库';
+                    row.type = row.type === 'backstock' ? '退库': row.type === 'outstock' ? '出库' : row.type === 'test' ?'测试' : row.type === 'delete' ?'删除':row.type === 'change' ?'替换出库':row.type === 'instock' ?"入库":"";
+                    row.outSystem = row.system === 'lanyue' ? "秦皇岛老揽月" : row.system === 'manage' ? "后台管理系统" : "";
                     row.update =  moment(row.update).zone("+08:00").format("YYYY-MM-DD HH:mm:ss");  
                 }
             }

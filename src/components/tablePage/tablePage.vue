@@ -72,7 +72,7 @@
             <el-table :data="initData.datas" style="width:100%;margin-bottom:30px" ref="multipleTable" @selection-change="handleSelectionChange">
             <!-- <el-table :data="initData.datas" style="width:100%;margin-bottom:30px" ref="multipleTable"  v-if="manager"> -->
                 <el-table-column type="selection" width="45"></el-table-column>
-                <el-table-column :prop='item.prop' min-width="110" :label='item.label' v-for="item in columns" :key="item.index">
+                <el-table-column :prop='item.prop' min-width="105" :label='item.label' v-for="item in columns" :key="item.index">
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" :width="buttonBoxWidth" class-name="edit-buttons">
                     <template slot-scope="scope">
@@ -121,8 +121,8 @@
                     <span class="colName">{{itemDevicesData.collector_id}}</span>
                 </span>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="Cancel">取 消</el-button>
-                    <el-button type="primary" @click="sureDelete">确 定</el-button>
+                    <mu-button @click="Cancel" flat class="cancel" normal>取 消</mu-button>
+                    <mu-button color="primary" @click="sureDelete" normal>确 定</mu-button>
                 </div>
             </div>
              <!-- 测试 -->
@@ -211,6 +211,10 @@ export default {
                 {
                     label: "检测状态",
                     prop: "test_result"
+                },
+                {
+                    label: "SIM卡号",
+                    prop: "SIM"
                 }
             ],
             deleteIndex: null,
@@ -296,7 +300,7 @@ export default {
         },
         calculateBox() {
             if (this.manager) {
-                this.buttonBoxWidth = 290;
+                this.buttonBoxWidth = 260;
             } else {
                 this.buttonBoxWidth = 80;
             }
@@ -480,11 +484,11 @@ export default {
     }
     .el-table {
       .mu-raised-button {
-        min-width: 43px;
+        min-width: 38px;
         height:26px;
         line-height: 26px;
         .mu-button-wrapper{
-            padding:0 7px;
+            padding:0 5px;
         }
       }
       tr {
@@ -513,6 +517,12 @@ export default {
     margin-top: 20px;
     width: 100%;
     text-align: right;
+      .mu-button{
+            margin-right:10px;
+        }
+        .cancel{
+            border:1px solid #ccc
+        }
   }
   .colName {
     color: red;
