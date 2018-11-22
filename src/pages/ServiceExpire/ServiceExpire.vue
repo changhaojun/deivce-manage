@@ -101,7 +101,7 @@ export default {
     },
     methods:{
         async getSevicesExpire(){
-            const {result} = await this.$http('datas/expireCount');
+            const {result} = await this.$http('expireDatas/expireCount');
             this.allData = result.rows.reverse();
             this.initButton()
         },
