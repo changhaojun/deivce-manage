@@ -7,13 +7,31 @@
     </div>
     <el-menu mode="vertical" :show-timeout="200" background-color="#00142a" text-color="hsla(0, 0%, 100%, .65)" active-text-color="#409EFF">
       <template v-for="item in asideMenuConfig" >
-        <mu-list :key ="item.name">
+        <mu-list :key ="item.name" toggle-nested>
           <mu-list-item button :ripple="true" v-if="!item.children" :to="item.path" :key="item.name" @click="toUrl(item)">
             <mu-list-item-action>
               <i v-if="item.icon" :class="item.icon"></i>
             </mu-list-item-action>
             <mu-list-item-title style="letter-spacing:1px">{{item.name}}</mu-list-item-title>
           </mu-list-item>
+          <!-- <mu-list-item button :ripple="true" v-else nested  nested-indent="true" :to="item.path" :key="item.name" @click="toUrl(item)">
+            <mu-list-item-action>
+              <i v-if="item.icon" :class="item.icon"></i>
+            </mu-list-item-action>
+            <mu-list-item-title style="letter-spacing:1px">{{item.name}}</mu-list-item-title>
+            <mu-list-item-action>
+              
+            </mu-list-item-action>
+            <mu-list-item button :ripple="true" slot="nested">
+              <mu-list-item-title>List Item 1</mu-list-item-title>
+            </mu-list-item>
+            <mu-list-item button :ripple="true" slot="nested">
+              <mu-list-item-title>List Item 2</mu-list-item-title>
+            </mu-list-item>
+            <mu-list-item button :ripple="true" slot="nested">
+              <mu-list-item-title>List Item 3</mu-list-item-title>
+            </mu-list-item>
+          </mu-list-item> -->
         </mu-list>
       </template>
     </el-menu>

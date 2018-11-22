@@ -9,7 +9,15 @@ const asideMenuConfig = [
     path: '/main',
     name: '首页统计',
     // icon: 'el-icon-menu',
-    icon: 'iconfont icon-tubiaozhexiantu'
+    icon: 'iconfont icon-tubiaozhexiantu',
+    children:[
+      {
+        path: '/typeList',
+        name: '型号列表',
+        // icon: 'el-icon-menu',
+        icon: 'iconfont icon-tubiaozhexiantu',
+      }
+    ]
   },
   {
     path: '/typeList',

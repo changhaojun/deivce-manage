@@ -78,6 +78,10 @@ export default {
                     prop: 'collector_amount'
                 },
                 {
+                    label: "已出库",
+                    prop: 'finishNumber'
+                },
+                {
                     label: "签订日期",
                     prop: 'signing_date'
                 },
@@ -103,6 +107,7 @@ export default {
             const { result } = await this.$http("pact",{data:this.params})
             for(const row of result.rows){
                row.signing_date && (row.signing_date = row.signing_date.split('T')[0]); 
+               row.finishNumber = !row.finishNumber ? 0 : row.finishNumber;
             }
             this.initData.datas = result.rows;
             this.initData.total = result.total;

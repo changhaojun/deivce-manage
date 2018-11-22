@@ -22,6 +22,13 @@ const routerConfig = [
     path: '/main',
     layout: HeaderAsideLayout,
     component: Dashboard,
+    // children:[
+    //   {
+    //     path: '/typeList',
+    //     layout: HeaderAsideLayout,
+    //     component: BoxTypeList,
+    //   }
+    // ]
   },
   {
     path: '/typeList',

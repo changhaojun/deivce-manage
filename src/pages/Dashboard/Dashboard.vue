@@ -69,7 +69,7 @@ export default {
   methods: {
     //获取型号
     async getDevicesModels(){
-      const {result} = await this.$http('datas/modelsCount');
+      const {result} = await this.$http('modelDatas/modelsCount');
       const legend=[];
       result.value.reverse();
       result.value.forEach((item,index,arr)=>{
@@ -88,17 +88,17 @@ export default {
     },
     //获取库存
     async getStock(){
-      const {result} = await this.$http('datas/repertoryCount');
+      const {result} = await this.$http('stockDatas/repertoryCount');
       this.stock = screenPie(this.$refs.stock,result.rows,this.chartColor);
     },
     //获取故障
     async getTrouble(){
-      const {result} = await this.$http('datas/faultCount');
+      const {result} = await this.$http('faultDatas/faultCount');
       this.fault = screenPie(this.$refs.trouble,result.rows,this.chartColor);
     },
     //获取服务到期
     async getExpireCount(){
-      const {result} = await this.$http('datas/expireCount');
+      const {result} = await this.$http('expireDatas/expireCount');
       result.rows.forEach((item)=>{
         item.value = item.item.length;
         item.type = item.name;
@@ -108,7 +108,7 @@ export default {
     },
     // 获取型号每月出库统计
     async getMonthCount(){
-      const {result} = await this.$http('datas/monthCount',{data:{year:this.params.year}});
+      const {result} = await this.$http('modelDatas/monthCount',{data:{year:this.params.year}});
       result.rows.forEach((item)=>{
         item.type="line";
         item.data = item.value

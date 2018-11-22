@@ -17,12 +17,20 @@
                     </el-col>
                 </el-row>
             </mu-form>
-        </div>
+        </div>    
         <div class="header">
            <mu-button color="primary" :flat="!(activeIndex === index)" @click="activeClick(item.prop,index)" v-for="(item,index) in activeButton" :key="index">{{item.label}}</mu-button>
-       </div>
+        </div>
+        <div class="header">
+             <el-row :gutter="15">
+                <el-col :span="3" v-for="items in allData" :key="items.index">
+                    <span class="sum">{{items.name === "one"? '1个月以内' :items.name === "two" ?'2个月':items.name === "three" ?'3个月':'3个月以上'}} : <span>{{(params.like.customer_name && activeButton[activeIndex].prop === items.name)  ?selectedData.length:items.item.length}}</span> 个</span>
+                </el-col>
+            </el-row>  
+        </div>
        <div class="content">
         <el-table :data="selectedData" style="width:100%;margin-bottom:30px;padding:0 20px">
+            <el-table-column type="index" width="50"> </el-table-column>
             <el-table-column :prop='item.prop' min-width="120" :label='item.label' v-for="item in columns" :key="item.index">
             </el-table-column>
         </el-table>
@@ -89,24 +97,26 @@ export default {
                   
                 },
             ],
-
         }
     },
     methods:{
         async getSevicesExpire(){
-             const {result} = await this.$http('datas/expireCount');
-             this.allData = result.rows;
+            const {result} = await this.$http('datas/expireCount');
+            this.allData = result.rows.reverse();
             this.initButton()
         },
         activeClick(name,index){
-            this.activeIndex = index
+            this.activeIndex = index ;
             this.allData.forEach((Item)=>{
                  Item.item.forEach((items)=>{
                     items.validity = items.validity.split('T')[0];
                     items.type = ((items.stock_status === 1)? '已出库' : "未出库");
                 })
-                if(name === Item.name){                    
-                    this.copySelectedData = this.selectedData = Item.item;
+                if(name === Item.name){  
+                    this.copySelectedData = this.selectedData = Item.item;                   
+                    if(this.params.like.customer_name){
+                       this.Search()  
+                    }
                 }  
             })
         },
@@ -124,21 +134,18 @@ export default {
         },
         Search(){
             const arr = [];
-            this.allData.forEach((item)=>{
-                item.item.forEach((items)=>{
-                    if(items.customer_name){
-                        if(items.customer_name.search(this.params.like.customer_name)!==-1){
-                            arr.push(items);
-                        }
+            this.copySelectedData.forEach((item)=>{
+                if(item.customer_name){
+                    if(item.customer_name.search(this.params.like.customer_name)!==-1){
+                        arr.push(item);
                     }
-                })   
+                }
             })
             this.selectedData = arr;
-             this.activeClick("",-1);
         },
         reset(){
             this.params.like.customer_name = "";
-            this.activeClick("one",0);
+            this.selectedData = this.copySelectedData;
         }
     },
     created(){
@@ -167,6 +174,14 @@ export default {
             line-height: 80px;
             background: #fff;
             margin-bottom:20px;
+            .sum{
+                padding-left:20px;
+                font-size:16px;
+                span{
+                    color:#2196f3;
+                    font-size:26px;
+                }
+            }
         }
         .mu-button{
             margin: 10px;
