@@ -79,7 +79,7 @@ export default {
           sessionStorage.setItem('fullname', fullname);
           sessionStorage.setItem('user_id', user_id);
           sessionStorage.setItem('userInfo', JSON.stringify(this.user));
-          this.$router.push({path: '/main'});
+          this.$router.push({path: '/main/model'});
         }
       });
     },

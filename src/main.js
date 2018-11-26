@@ -7,7 +7,7 @@ import App from './App.vue';
 import router from './router';
 import service from './components/server.js';
 import 'muse-ui/lib/styles/base.less';
-import { Button, Select, Helpers, TextField,Checkbox,Radio,Switch,theme,DateInput,Picker,Form, AppBar,List, Menu} from 'muse-ui';
+import { Button, Select, Helpers, TextField,Checkbox,Radio,Switch,theme,DateInput,Picker,Form, AppBar,List, Menu,Icon} from 'muse-ui';
 import 'muse-ui/lib/styles/theme.less';
 Vue.use(ElementUI);
 
@@ -24,6 +24,7 @@ Vue.use(Picker);
 Vue.use(AppBar);
 Vue.use(Form);
 Vue.use(List);
+Vue.use(Icon);
 Vue.use(Menu);
 // Vue.use(Container);
 theme.add('carbon', {

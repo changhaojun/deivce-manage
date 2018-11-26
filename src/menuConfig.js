@@ -6,18 +6,36 @@ const headerMenuConfig = [];
 
 const asideMenuConfig = [
   {
-    path: '/main',
+    path: '/main/model',
     name: '首页统计',
     // icon: 'el-icon-menu',
     icon: 'iconfont icon-tubiaozhexiantu',
-    // children:[
-    //   {
-    //     path: '/typeList',
-    //     name: '型号列表',
-    //     // icon: 'el-icon-menu',
-    //     icon: 'iconfont icon-tubiaozhexiantu',
-    //   }
-    // ]
+    children:[
+      {
+        path: '/main/model',
+        name: '型号统计',
+        // icon: 'el-icon-menu',
+        icon: 'iconfont icon-tubiaozhexiantu',
+      },
+      {
+        path: '/main/stock',
+        name: '库存统计',
+        // icon: 'el-icon-menu',
+        icon: 'iconfont icon-tubiaozhexiantu',
+      },
+      {
+        path: '/main/falut',
+        name: '故障统计',
+        // icon: 'el-icon-menu',
+        icon: 'iconfont icon-tubiaozhexiantu',
+      },
+      {
+        path: '/main/serve',
+        name: '服务统计',
+        // icon: 'el-icon-menu',
+        icon: 'iconfont icon-tubiaozhexiantu',
+      }
+    ]
   },
   {
     path: '/typeList',

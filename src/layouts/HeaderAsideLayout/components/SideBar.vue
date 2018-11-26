@@ -14,24 +14,18 @@
             </mu-list-item-action>
             <mu-list-item-title style="letter-spacing:1px">{{item.name}}</mu-list-item-title>
           </mu-list-item>
-          <!-- <mu-list-item button :ripple="true" v-else nested  nested-indent="true" :to="item.path" :key="item.name" @click="toUrl(item)">
+          <mu-list-item button :ripple="true" v-else nested  nested-indent="true" :key="item.name">
             <mu-list-item-action>
               <i v-if="item.icon" :class="item.icon"></i>
             </mu-list-item-action>
             <mu-list-item-title style="letter-spacing:1px">{{item.name}}</mu-list-item-title>
             <mu-list-item-action>
-              
+              <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_down"></mu-icon>
             </mu-list-item-action>
-            <mu-list-item button :ripple="true" slot="nested">
-              <mu-list-item-title>List Item 1</mu-list-item-title>
+            <mu-list-item button :ripple="true" slot="nested"  @click="toUrl(items)"  :to="items.path" v-for="items in item.children" :key ="items.name">
+              <mu-list-item-title>{{items.name}}</mu-list-item-title>
             </mu-list-item>
-            <mu-list-item button :ripple="true" slot="nested">
-              <mu-list-item-title>List Item 2</mu-list-item-title>
-            </mu-list-item>
-            <mu-list-item button :ripple="true" slot="nested">
-              <mu-list-item-title>List Item 3</mu-list-item-title>
-            </mu-list-item>
-          </mu-list-item> -->
+          </mu-list-item>
         </mu-list>
       </template>
     </el-menu>
@@ -48,7 +42,7 @@ export default {
   props: {},
   data() {
     return {
-      asideMenuConfig,
+      asideMenuConfig
     };
   },
   methods: {
@@ -99,6 +93,9 @@ export default {
     .router-link-active {
       background-color: #188fff !important;
       // color: #fff !important;
+    }
+    .toggle-icon{
+      color: rgba(255, 255, 255, 0.65);
     }
     .mu-item {
       font-size: 16px;

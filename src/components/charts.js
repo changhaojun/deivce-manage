@@ -67,7 +67,7 @@ export const barCharts = (el, dataX, dataY, legend, barColor) => {
     // });
     const barOption = {
         grid: grid,
-        color: barColor,
+
         tooltip: { 
             trigger: 'axis',
             axisPointer: {

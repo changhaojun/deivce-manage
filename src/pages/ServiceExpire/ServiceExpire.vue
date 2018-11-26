@@ -18,13 +18,13 @@
                 </el-row>
             </mu-form>
         </div>    
-        <div class="header">
+        <!-- <div class="header">
            <mu-button color="primary" :flat="!(activeIndex === index)" @click="activeClick(item.prop,index)" v-for="(item,index) in activeButton" :key="index">{{item.label}}</mu-button>
-        </div>
+        </div> -->
         <div class="header">
              <el-row :gutter="15">
-                <el-col :span="3" v-for="items in allData" :key="items.index">
-                    <span class="sum">{{items.name === "one"? '1个月以内' :items.name === "two" ?'2个月':items.name === "three" ?'3个月':'3个月以上'}} : <span>{{(params.like.customer_name && activeButton[activeIndex].prop === items.name)  ?selectedData.length:items.item.length}}</span> 个</span>
+                <el-col :span="3" v-for="(items,index) in allData" :key="items.index">
+                    <span class="sum" :class="{active:(activeIndex === index)}" @click="activeClick(items.name,index)">{{items.name === "one"? '1个月以内' :items.name === "two" ?'2个月':items.name === "three" ?'3个月':'3个月以上'}} : </span><span class="count" :class="{activecount:(activeIndex === index)}">{{items.item.length}}</span>
                 </el-col>
             </el-row>  
         </div>
@@ -102,21 +102,28 @@ export default {
     methods:{
         async getSevicesExpire(){
             const {result} = await this.$http('expireDatas/expireCount');
-            this.allData = result.rows.reverse();
+            this.allData = result.rows;
+            this.copySelectedData =JSON.parse(JSON.stringify(result.rows.reverse()));     
             this.initButton()
         },
         activeClick(name,index){
             this.activeIndex = index ;
+            const arr =[]
             this.allData.forEach((Item)=>{
                  Item.item.forEach((items)=>{
                     items.validity = items.validity.split('T')[0];
                     items.type = ((items.stock_status === 1)? '已出库' : "未出库");
-                })
-                if(name === Item.name){  
-                    this.copySelectedData = this.selectedData = Item.item;                   
                     if(this.params.like.customer_name){
-                       this.Search()  
-                    }
+                        if(items.customer_name){
+                            if(items.customer_name.search(this.params.like.customer_name)!==-1){
+                                arr.push(items);
+                                Item.item = arr
+                            }
+                        }
+                    } 
+                })
+                if(name === Item.name){               
+                   this.selectedData = Item.item;  
                 }  
             })
         },
@@ -133,19 +140,12 @@ export default {
             } 
         },
         Search(){
-            const arr = [];
-            this.copySelectedData.forEach((item)=>{
-                if(item.customer_name){
-                    if(item.customer_name.search(this.params.like.customer_name)!==-1){
-                        arr.push(item);
-                    }
-                }
-            })
-            this.selectedData = arr;
+            this.activeClick(this.activeButton[this.activeIndex].prop,this.activeIndex)
         },
         reset(){
             this.params.like.customer_name = "";
-            this.selectedData = this.copySelectedData;
+            this.allData=JSON.parse(JSON.stringify(this.copySelectedData));
+            this.activeClick("one",0)
         }
     },
     created(){
@@ -176,11 +176,18 @@ export default {
             margin-bottom:20px;
             .sum{
                 padding-left:20px;
-                font-size:16px;
-                span{
-                    color:#2196f3;
-                    font-size:26px;
-                }
+                font-size:20px;
+                cursor: pointer;       
+            }
+            .count{
+                color:#2196f3;
+                font-size:22px;      
+            }
+            .active{
+                text-shadow: 0.1em 0.1em 0.2em black  
+            }
+            .activecount{
+                text-shadow: 0.1em 0.1em 0.2em #2196f3
             }
         }
         .mu-button{
