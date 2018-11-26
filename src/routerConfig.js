@@ -15,7 +15,7 @@ import ServicesExpire from './pages/ServiceExpire';
 import Model from './pages/Dashboard/Model';
 import Stock from './pages/Dashboard/Stock';
 import Serve from './pages/Dashboard/Serve';
-import Fault from './pages/Dashboard/Falut';
+import Falut from './pages/Dashboard/Falut';
 const routerConfig = [
   {
     path: '/',
@@ -40,7 +40,7 @@ const routerConfig = [
       {
         path: '/main/falut',
         layout: HeaderAsideLayout,
-        component: Fault,
+        component: Falut,
       },
       {
         path: '/main/serve',
