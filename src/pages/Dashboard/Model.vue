@@ -23,7 +23,7 @@
         </div>
         <!-- 出库客户类型统计 -->
         <div class="modelContent">
-            <div class="header">出库型号客户统计</div>
+            <div class="header">出库型号客户统计TOP5</div>
             <div class="stock-count" ref="outmodel"> </div>
         </div>
     </div>
@@ -114,7 +114,7 @@ export default {
                     })
                 }
                 arr=arr.sort((a,b)=>{
-                 return b.value-a.value
+                    return b.value-a.value
                 }).slice(0,5);
                 dataX.push(model)
                 if (arr.length > 0) {
@@ -170,8 +170,7 @@ export default {
         font-size:18px;
         span{
            font-size:22px;
-        }
-        
+        } 
     }
     .header{
       line-height: 60px;

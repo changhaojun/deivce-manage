@@ -120,8 +120,6 @@ export default {
       this.monthCount = lineCharts(this.$refs.modelOutStock,dataX,result.rows)
     },
     selectYear(year){
-      
-
       this.getMonthCount();
     }
 

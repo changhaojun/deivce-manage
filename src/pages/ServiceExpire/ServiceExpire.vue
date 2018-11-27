@@ -22,9 +22,9 @@
            <mu-button color="primary" :flat="!(activeIndex === index)" @click="activeClick(item.prop,index)" v-for="(item,index) in activeButton" :key="index">{{item.label}}</mu-button>
         </div> -->
         <div class="header">
-             <el-row :gutter="15">
-                <el-col :span="3" v-for="(items,index) in allData" :key="items.index">
-                    <span class="sum" :class="{active:(activeIndex === index)}" @click="activeClick(items.name,index)">{{items.name === "one"? '1个月以内' :items.name === "two" ?'2个月':items.name === "three" ?'3个月':'3个月以上'}} : </span><span class="count" :class="{activecount:(activeIndex === index)}">{{items.item.length}}</span>
+             <el-row :gutter="0">
+                <el-col :span="2.5" v-for="(items,index) in allData" :key="items.index">
+                    <mu-button  color="primary"  :flat="!(activeIndex === index)"  class="sum" @click="activeClick(items.name,index)">{{items.name === "one"? '1个月以内' :items.name === "two" ?'2个月':items.name === "three" ?'3个月':'3个月以上'}} : <span class="count" >{{items.item.length}}</span> </mu-button>
                 </el-col>
             </el-row>  
         </div>
@@ -175,13 +175,13 @@ export default {
             background: #fff;
             margin-bottom:20px;
             .sum{
-                padding-left:20px;
-                font-size:20px;
+               
+                font-size:16px;
                 cursor: pointer;       
             }
             .count{
-                color:#2196f3;
-                font-size:22px;      
+                // color:#2196f3;
+                font-size:18px;      
             }
             .active{
                 text-shadow: 0.1em 0.1em 0.2em black  
