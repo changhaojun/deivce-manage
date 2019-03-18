@@ -1,3 +1,3 @@
-import Stockmanage from './Stockmanage.vue';
+// import Stockmanage from './Stockmanage.vue';
 
-export default Stockmanage;
+// export default Stockmanage;

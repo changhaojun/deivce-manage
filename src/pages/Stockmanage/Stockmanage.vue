@@ -1,24 +1,20 @@
 <template>
-  <div class="stock-manage">
-    <!-- 导出 -->
-    
-    
-    <!-- 表格数据 -->
+  <!-- <div class="stock-manage">
     <table-page :manager="true" class="Table">
     </table-page>
    
-  </div>
+  </div> -->
 </template>
 <script>
-import tablePage from "../../components/tablePage";
-export default {
-  name: 'Stockmanage',
-  components:{tablePage},
-  data() {
-    return {
-    };
-  },
-  methods: {
-  }
-};
+// import tablePage from "../../components/tablePage";
+// export default {
+//   name: 'Stockmanage',
+//   components:{tablePage},
+//   data() {
+//     return {
+//     };
+//   },
+//   methods: {
+//   }
+// };
 </script>

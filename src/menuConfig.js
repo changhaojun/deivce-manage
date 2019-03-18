@@ -44,16 +44,44 @@ const asideMenuConfig = [
     icon: 'iconfont icon-liebiao'
   },
   {
-    path: '/deviceList',
+    path: '/deviceList/dtu',
     name: '设备列表',
     // icon: 'el-icon-edit-outline',
-    icon: 'iconfont icon-liebiao'
+    icon: 'iconfont icon-liebiao',
+    children: [
+      {
+        path: '/deviceList/dtu',
+        name: 'DTU列表',
+        // icon: 'el-icon-menu',
+        icon: 'iconfont icon-liebiao',
+      },
+      {
+        path: '/deviceList/temp',
+        name: '温度计列表',
+        // icon: 'el-icon-menu',
+        icon: 'iconfont icon-liebiao',
+      }
+    ]
   },
   {
-    path: '/deviceManage',
+    path: '/deviceManage/dtu',
     name: '设备库存管理',
     // icon: 'el-icon-edit-outline',
-    icon: 'iconfont icon-kucun'
+    icon: 'iconfont icon-kucun',
+    children: [
+      {
+        path: '/deviceManage/dtu',
+        name: 'DTU管理',
+        // icon: 'el-icon-menu',
+        icon: 'iconfont icon-kucun',
+      },
+      {
+        path: '/deviceManage/temp',
+        name: '温度计管理',
+        // icon: 'el-icon-menu',
+        icon: 'iconfont icon-kucun',
+      }
+    ]
   },
   {
     path: '/contractManage',

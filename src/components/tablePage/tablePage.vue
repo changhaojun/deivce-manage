@@ -20,7 +20,7 @@
                             <mu-text-field v-model="conditions.like.customer_name"></mu-text-field>
                         </mu-form-item>
                     </el-col>
-                    <el-col :span="4">
+                    <el-col :span="4" v-if="deviceType === 'dtu'">
                         <mu-form-item label="检测状态">
                             <mu-select v-model="conditions.filter.check_result" filterable placeholder="请选择" full-width>
                                 <mu-option v-for="item in checkOptions" :key="item.num" :label="item.label" :value="item.num"></mu-option>
@@ -76,7 +76,7 @@
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" :width="buttonBoxWidth" class-name="edit-buttons">
                     <template slot-scope="scope">
-                         <mu-button v-if="manager" color="primary" mini @click="TestDialog(scope.$index, scope.row)">测试</mu-button>
+                        <mu-button v-if="manager" color="primary" mini @click="TestDialog(scope.$index, scope.row)">测试</mu-button>
                         <mu-button v-if="manager" color="primary" mini @click="OutStockDialog(scope.row,false)">出库</mu-button>
                         <mu-button v-if="manager" color="primary" mini @click="BackStockDialog(scope.$index, scope.row)">退库</mu-button>
                         <mu-button v-if="manager" color="primary" mini @click="deleteStock(scope.$index, scope.row)">删除</mu-button>
@@ -141,7 +141,7 @@ import TestLayout from './TestLayout.vue';
 import moment from 'moment';
 export default {
     components: { InStockLayout, OutStock, BackStock, ViewPath, TestLayout },
-    props: ['manager'],
+    props: ['manager', 'deviceType'],
     data() {
         return {
             conditions: {
@@ -283,6 +283,7 @@ export default {
                 delete this.conditions.filter.status;
             }
             requestData.filter = this.conditions.filter;
+            console.log(requestData);
             const { result: { rows, total } } = await this.$http('devices', { data: requestData });
             for (const data of rows) {
                 data.test_result = data.check_result === 0 ? '不合格' : data.check_result === 2 ? '未检测' : data.check_result === 3 ? "维修中" :"合格";

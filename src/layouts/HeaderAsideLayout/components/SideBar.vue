@@ -16,7 +16,7 @@
           </mu-list-item>
           <mu-list-item button :ripple="true" v-else nested  nested-indent="true" :key="item.name">
             <mu-list-item-action>
-              <i v-if="item.icon" :class="item.icon"></i>
+              <i v-if="item.icon" :class="item.icon" ></i>
             </mu-list-item-action>
             <mu-list-item-title style="letter-spacing:1px">{{item.name}}</mu-list-item-title>
             <mu-list-item-action>
@@ -42,7 +42,8 @@ export default {
   props: {},
   data() {
     return {
-      asideMenuConfig
+      asideMenuConfig,
+      open: 'send'
     };
   },
   methods: {

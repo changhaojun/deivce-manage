@@ -8,8 +8,10 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 
 import BoxTypeList from './pages/BoxTypeList';
-import Devices from './pages/Devices';
-import StockManage from './pages/Stockmanage';
+import DtuList from './pages/Devices/Dtulist';
+import TempList from './pages/Devices/Templist';
+import DtuManage from './pages/Stockmanage/Dtumanage';
+import TempManage from './pages/Stockmanage/Tempmanage';
 import ContractManage from './pages/ContractManage';
 import ServicesExpire from './pages/ServiceExpire';
 import Model from './pages/Dashboard/Model';
@@ -55,14 +57,38 @@ const routerConfig = [
     component: BoxTypeList,
   },
   {
-    path: '/deviceList',
+    path: '/deviceList/dtu',
     layout: HeaderAsideLayout,
-    component: Devices,
+    component: DtuList,
+    children: [
+      {
+        path: '/deviceList/dtu',
+        layout: HeaderAsideLayout,
+        component: DtuList,
+      },
+      {
+        path: '/deviceList/temp',
+        layout: HeaderAsideLayout,
+        component: TempList,
+      }
+    ]
   },
   {
-    path: '/deviceManage',
+    path: '/deviceManage/dtu',
     layout: HeaderAsideLayout,
-    component: StockManage,
+    component: DtuManage,
+    children: [
+      {
+        path: '/deviceManage/dtu',
+        layout: HeaderAsideLayout,
+        component: DtuManage,
+      },
+      {
+        path: '/deviceManage/temp',
+        layout: HeaderAsideLayout,
+        component: TempManage,
+      }
+    ]
   },
   {
     path: '/contractManage',
