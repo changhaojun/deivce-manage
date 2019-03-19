@@ -4,7 +4,7 @@
     
     
     <!-- 表格数据 -->
-    <table-page :manager="true" class="Table">
+    <table-page :manager="true" :deviceType=0 class="Table">
     </table-page>
    
   </div>

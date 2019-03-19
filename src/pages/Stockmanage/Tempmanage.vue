@@ -1,6 +1,6 @@
 <template>
   <div class="stock-manage">
-    <table-page :manager="true" class="Table">
+    <table-page :manager="true" :deviceType=1 class="Table">
     </table-page>
    
   </div>

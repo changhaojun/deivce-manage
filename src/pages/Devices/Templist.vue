@@ -1,6 +1,6 @@
 <template>
     <div class="devices-page">
-        <table-page :manager="false", :deviceType="temp"></table-page>
+        <table-page :manager="false" :deviceType=1></table-page>
     </div>
 </template>
 <script>

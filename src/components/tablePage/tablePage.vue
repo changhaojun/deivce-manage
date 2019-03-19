@@ -3,7 +3,7 @@
         
         <!-- <mu-button class="export" fab small @click='export2Excel'>导出</mu-button> -->
         <div class="searc-filter"  @keydown.enter="search">
-            <mu-form :model="conditions" label-position="top" label-width="100">
+            <mu-form v-if="deviceType === 0" :model="conditions" label-position="top" label-width="100">
                 <el-row :gutter="30">
                     <el-col :span="4">
                         <mu-form-item label="采集器ID">
@@ -20,7 +20,7 @@
                             <mu-text-field v-model="conditions.like.customer_name"></mu-text-field>
                         </mu-form-item>
                     </el-col>
-                    <el-col :span="4" v-if="deviceType === 'dtu'">
+                    <el-col :span="4">
                         <mu-form-item label="检测状态">
                             <mu-select v-model="conditions.filter.check_result" filterable placeholder="请选择" full-width>
                                 <mu-option v-for="item in checkOptions" :key="item.num" :label="item.label" :value="item.num"></mu-option>
@@ -36,14 +36,7 @@
                         <mu-form-item label="结束时间">
                             <mu-date-input v-model="conditions.date.end_time" label-float full-width></mu-date-input>
                         </mu-form-item>
-                    </el-col>            
-                    <!-- <el-col :span="4">
-                        <mu-form-item label="启停状态">
-                            <mu-select v-model="conditions.filter.status" filterable placeholder="请选择" full-width>
-                                <mu-option v-for="item in statusOptions" :key="item.num" :label="item.label" :value="item.num"></mu-option>
-                            </mu-select>
-                        </mu-form-item>
-                    </el-col> -->
+                    </el-col>
                 </el-row>
                 <el-row :gutter="20">
                      <el-col :span="4">
@@ -53,8 +46,7 @@
                             </mu-select>
                         </mu-form-item>
                     </el-col>
-                    
-                    <el-col :span="8" class="form-buttons">
+                    <el-col :span="10" class="form-buttons">
                         <mu-form-item>
                             <mu-button color="primary" @click="search">搜索</mu-button>
                             <mu-button color="warning" @click="reset">重置</mu-button>
@@ -63,20 +55,74 @@
                     </el-col>
                 </el-row>
             </mu-form>
+            <mu-form v-if="deviceType === 1" :model="conditions" label-position="top" label-width="100">
+                <el-row :gutter="30">
+                    <el-col :span="4">
+                        <mu-form-item label="SN">
+                            <mu-text-field v-model="conditions.like.collector_id"></mu-text-field>
+                        </mu-form-item>
+                    </el-col>
+                    <el-col :span="4">
+                        <mu-form-item label="型号">
+                            <mu-text-field v-model="conditions.like.collector_model"></mu-text-field>
+                        </mu-form-item>
+                    </el-col>
+                    <el-col :span="4">
+                        <mu-form-item label="所属客户">
+                            <mu-text-field v-model="conditions.like.customer_name"></mu-text-field>
+                        </mu-form-item>
+                    </el-col>
+                    <el-col :span="4">
+                        <mu-form-item label="采集周期">
+                            <mu-text-field v-model="conditions.like.customer_name"></mu-text-field>
+                        </mu-form-item>
+                    </el-col>    
+                    <el-col :span="4">
+                        <mu-form-item label="开始时间">
+                            <mu-date-input v-model="conditions.date.start_time" label-float full-width></mu-date-input>
+                        </mu-form-item>
+                    </el-col>
+                    <el-col :span="4">
+                        <mu-form-item label="结束时间">
+                            <mu-date-input v-model="conditions.date.end_time" label-float full-width></mu-date-input>
+                        </mu-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                     <el-col :span="4">
+                        <mu-form-item label="库存状态">
+                            <mu-select v-model="conditions.filter.stock_status" filterable placeholder="请选择" full-width>
+                                <mu-option v-for="item in stcokOptions" :key="item.value" :label="item.label" :value="item.value"></mu-option>
+                            </mu-select>
+                        </mu-form-item>
+                    </el-col>
+                    <el-col :span="10" class="form-buttons">
+                        <mu-form-item>
+                            <mu-button color="primary" @click="search">搜索</mu-button>
+                            <mu-button color="warning" @click="reset">重置</mu-button>
+                            <mu-button v-if="manager" color="secondary" @click="batchStock">批量出库</mu-button>
+                            <label v-if="manager && deviceType === 1" for="fileinp" id='stocl-label'>
+                                <input type="button" id="btn" value="批量入库">
+                                <input type="file" title=" " id="fileinp" @change="importf">
+                            </label>
+                        </mu-form-item>
+                    </el-col>
+                </el-row>
+            </mu-form>
         </div>
         <div class="content">
             <div class="title">
                 <span class="titleText">设备列表</span>
-                <mu-button class="instock" color="primary" @click="inStock" v-if="manager">入库</mu-button>
+                 <mu-button class="instock" color="primary" @click="inStock" v-if="manager">入库</mu-button>
             </div>
             <el-table :data="initData.datas" style="width:100%;margin-bottom:30px" ref="multipleTable" @selection-change="handleSelectionChange">
             <!-- <el-table :data="initData.datas" style="width:100%;margin-bottom:30px" ref="multipleTable"  v-if="manager"> -->
                 <el-table-column type="selection" width="45"></el-table-column>
-                <el-table-column :prop='item.prop' min-width="105" :label='item.label' v-for="item in columns" :key="item.index">
-                </el-table-column>
+                <el-table-column v-if="deviceType === 0" :prop='item.prop' min-width="105" :label='item.label' v-for="item in columns" :key="item.index"></el-table-column>
+                <el-table-column v-if="deviceType === 1" :prop='item.prop' min-width="105" :label='item.label' v-for="item in columnsTemp" :key="item.index"></el-table-column>
                 <el-table-column label="操作" fixed="right" :width="buttonBoxWidth" class-name="edit-buttons">
                     <template slot-scope="scope">
-                        <mu-button v-if="manager" color="primary" mini @click="TestDialog(scope.$index, scope.row)">测试</mu-button>
+                        <mu-button v-if="manager && deviceType === 0" color="primary" mini @click="TestDialog(scope.$index, scope.row)">测试</mu-button>
                         <mu-button v-if="manager" color="primary" mini @click="OutStockDialog(scope.row,false)">出库</mu-button>
                         <mu-button v-if="manager" color="primary" mini @click="BackStockDialog(scope.$index, scope.row)">退库</mu-button>
                         <mu-button v-if="manager" color="primary" mini @click="deleteStock(scope.$index, scope.row)">删除</mu-button>
@@ -98,8 +144,11 @@
         <!-- 弹窗 -->
         <el-dialog :title="dialogData.title" :visible.sync="dialogData.dialogFormVisible" :width="dialogData.dialogWidth" @close="Cancel">
             <!-- 入库 -->
-            <div v-if="dialogData.type===0">
+            <div v-if="dialogData.type===0 && deviceType === 0">
                 <in-stock-layout v-on:Cancel="Cancel" v-on:getTypeList="getData"></in-stock-layout>
+            </div>
+            <div v-if="dialogData.type===0 && deviceType === 1">
+                <in-stock-layout-temp v-on:Cancel="Cancel" v-on:getTypeList="getData"></in-stock-layout-temp>
             </div>
             <!-- 出库 -->
             <div v-if="dialogData.type === 1">
@@ -132,15 +181,18 @@
         </el-dialog>
     </div>
 </template>
+<script ></script>
 <script>
 import InStockLayout from "./InStockLayout.vue";
+import InStockLayoutTemp from "./InStockLayoutTemp.vue";
 import OutStock from "./OutStock.vue";
 import BackStock from "./BackStock.vue";
 import ViewPath from "./ViewPath.vue";
 import TestLayout from './TestLayout.vue';
 import moment from 'moment';
+import XLSX from './xlsx.full.min.js';
 export default {
-    components: { InStockLayout, OutStock, BackStock, ViewPath, TestLayout },
+    components: { InStockLayout, InStockLayoutTemp, OutStock, BackStock, ViewPath, TestLayout },
     props: ['manager', 'deviceType'],
     data() {
         return {
@@ -227,6 +279,54 @@ export default {
                 user_name:sessionStorage.getItem('fullname')
             },
             detailData:null,
+
+            // 批量入库
+            datas: {
+                devices: [],
+                operator: {
+                    user_id: '',
+                    user_name: ''
+                }
+            },
+            // 温度计
+            columnsTemp: [
+                {
+                    label: "SN",
+                    prop: "sn"
+                },
+                {
+                    label: "型号",
+                    prop: "model"
+                },
+                {
+                    label: "所属客户",
+                    prop: "customer_name"
+                },
+                {
+                    label: "入库时间",
+                    prop: "indate"
+                },
+                {
+                    label: "库存状态",
+                    prop: "stock_status"
+                },
+                {
+                    label: "采集周期",
+                    prop: "collect_interval"
+                }
+            ],
+            conditionsTemp: {
+                like: {
+                    sn: '',
+                    model: '',
+                    customer_name: '',
+                    collect_interval: null
+                },
+                filter: {
+                    stock_status: ''
+                },
+                date: {},
+            }
         }
     },
     methods: {
@@ -283,8 +383,8 @@ export default {
                 delete this.conditions.filter.status;
             }
             requestData.filter = this.conditions.filter;
-            console.log(requestData);
             const { result: { rows, total } } = await this.$http('devices', { data: requestData });
+            console.log(rows)
             for (const data of rows) {
                 data.test_result = data.check_result === 0 ? '不合格' : data.check_result === 2 ? '未检测' : data.check_result === 3 ? "维修中" :"合格";
                 data.status = data.status ? '启用' : '停用';
@@ -449,9 +549,78 @@ export default {
             if(this.$refs.Test){
                 this.$refs.Test.initData()
             }
+        },
+
+        // 批量入库
+        importf() {//导入
+            this.datas.devices = [];
+            let wb = null; //读取完成的数据
+            const rABS = false; //是否将文件读取为二进制字符串
+            const obj = document.querySelector('#fileinp');
+            if(!obj.files) {
+                return;
+            }
+            let f = obj.files[0];
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                let data = e.target.result;
+                if(rABS) {
+                    wb = XLSX.read(btoa(fixdata(data)), {//手动转化
+                        type: 'base64'
+                    });
+                } else {
+                    wb = XLSX.read(data, {
+                        type: 'binary'
+                    });
+                }
+                //wb.SheetNames[0]是获取Sheets中第一个Sheet的名字
+                //wb.Sheets[Sheet名]获取第一个Sheet的数据
+
+                // console.log(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]))
+                // 遍历sheet中的sheetname
+                wb.SheetNames.forEach(sheetname => {
+                    this.datas.devices = this.datas.devices.concat(XLSX.utils.sheet_to_json(wb.Sheets[sheetname]));
+                });
+                console.log(this.datas);
+                if(this.datas.devices.length > 0) {
+                    this.inStockBatch();
+                }else {
+                    this.$message({
+                        message: '导入的文件内容为空', 
+                        type: 'warning'
+                    })
+                }
+            };
+            
+            if(rABS) {
+                reader.readAsArrayBuffer(f);
+            } else {
+                reader.readAsBinaryString(f);
+            }
+        },
+
+        fixdata(data) { //文件流转BinaryString
+            let o = "",
+                l = 0,
+                w = 10240;
+            for(; l < data.byteLength / w; ++l) o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w, l * w + w)));
+            o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
+            return o;
+        },
+        async inStockBatch() {
+            const {result} = await this.$http.post('gauge',this.datas); 
+            this.$message({
+                message: '入库成功', 
+                type: 'success'
+            })
+            this.getData();
         }
     },
     created() {
+        if(sessionStorage.getItem('user_id')) {
+            this.datas.operator.user_id = sessionStorage.getItem('user_id');
+            this.datas.operator.user_name = sessionStorage.getItem('fullname');
+        }
         this.calculateBox();
         this.getData();
     },
@@ -537,6 +706,37 @@ export default {
       display: inline-block;
       margin-top:20px;
   }
-  
+    #stocl-label {
+        position: relative;
+        width: 88px;
+        height: 36px;
+        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+        &:hover {
+            opacity: 0.85;
+        }
+        margin-left: 8px;
+        #fileinp{
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 88px; 
+            height: 36px;
+            font-size: 0;
+            cursor: pointer;
+        }
+        #btn{
+            margin-right: 5px;
+            background-color: #ff4081; 
+            border: none; 
+            color: #ffffff; 
+            border-radius: 2px;
+            width: 88px; 
+            height: 36px;
+        }
+        #text{
+            color: red;
+        }
+    }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="devices-page">
-    <table-page :manager="false" :deviceType="dtu"></table-page>
+    <table-page :manager="false" :deviceType=0></table-page>
   </div>
 </template>
 
