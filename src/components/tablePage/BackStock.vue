@@ -43,6 +43,7 @@ export default {
         //确定退库
         async SureBackStock(){
             if(this.OutOrBackStockParams.fault_id){
+                console.log(this.OutOrBackStockParams)
                 const {result} = await this.$http.put('devices',this.OutOrBackStockParams);
                 this.$message({
                     message: '成功退库',

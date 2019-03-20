@@ -75,7 +75,6 @@ methods:{
     async InStock(){
         this.datas.devices = [];
         this.datas.devices.push(this.device);
-        const itemReg = /\D/
         if(this.device.model===''||this.device.sn==="" || this.device.imei === '' || this.device.imsi === ''){
             this.$message({
                 message: '请完善信息', 

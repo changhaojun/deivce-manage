@@ -1,6 +1,5 @@
 <template>
     <div class="table-page">
-        
         <!-- <mu-button class="export" fab small @click='export2Excel'>导出</mu-button> -->
         <div class="searc-filter"  @keydown.enter="search">
             <mu-form v-if="deviceType === 0" :model="conditions" label-position="top" label-width="100">
@@ -55,26 +54,26 @@
                     </el-col>
                 </el-row>
             </mu-form>
-            <mu-form v-if="deviceType === 1" :model="conditions" label-position="top" label-width="100">
+            <mu-form v-if="deviceType === 1" :model="conditionsTemp" label-position="top" label-width="100">
                 <el-row :gutter="30">
                     <el-col :span="4">
                         <mu-form-item label="SN">
-                            <mu-text-field v-model="conditions.like.collector_id"></mu-text-field>
+                            <mu-text-field v-model="conditionsTemp.like.sn"></mu-text-field>
                         </mu-form-item>
                     </el-col>
                     <el-col :span="4">
                         <mu-form-item label="型号">
-                            <mu-text-field v-model="conditions.like.collector_model"></mu-text-field>
+                            <mu-text-field v-model="conditionsTemp.like.collector_model"></mu-text-field>
                         </mu-form-item>
                     </el-col>
                     <el-col :span="4">
                         <mu-form-item label="所属客户">
-                            <mu-text-field v-model="conditions.like.customer_name"></mu-text-field>
+                            <mu-text-field v-model="conditionsTemp.like.customer_name"></mu-text-field>
                         </mu-form-item>
                     </el-col>
                     <el-col :span="4">
-                        <mu-form-item label="采集周期">
-                            <mu-text-field v-model="conditions.like.customer_name"></mu-text-field>
+                        <mu-form-item label="采集周期/分钟">
+                            <mu-text-field v-model="conditionsTemp.like.collect_interval"></mu-text-field>
                         </mu-form-item>
                     </el-col>    
                     <el-col :span="4">
@@ -91,7 +90,7 @@
                 <el-row :gutter="20">
                      <el-col :span="4">
                         <mu-form-item label="库存状态">
-                            <mu-select v-model="conditions.filter.stock_status" filterable placeholder="请选择" full-width>
+                            <mu-select v-model="conditionsTemp.filter.stock_status" filterable placeholder="请选择" full-width>
                                 <mu-option v-for="item in stcokOptions" :key="item.value" :label="item.label" :value="item.value"></mu-option>
                             </mu-select>
                         </mu-form-item>
@@ -101,7 +100,7 @@
                             <mu-button color="primary" @click="search">搜索</mu-button>
                             <mu-button color="warning" @click="reset">重置</mu-button>
                             <mu-button v-if="manager" color="secondary" @click="batchStock">批量出库</mu-button>
-                            <label v-if="manager && deviceType === 1" for="fileinp" id='stocl-label'>
+                            <label v-if="manager" for="fileinp" id='stocl-label'>
                                 <input type="button" id="btn" value="批量入库">
                                 <input type="file" title=" " id="fileinp" @change="importf">
                             </label>
@@ -123,15 +122,17 @@
                 <el-table-column label="操作" fixed="right" :width="buttonBoxWidth" class-name="edit-buttons">
                     <template slot-scope="scope">
                         <mu-button v-if="manager && deviceType === 0" color="primary" mini @click="TestDialog(scope.$index, scope.row)">测试</mu-button>
+                        <mu-button v-if="manager && deviceType === 1" color="primary" mini >编辑</mu-button>
                         <mu-button v-if="manager" color="primary" mini @click="OutStockDialog(scope.row,false)">出库</mu-button>
                         <mu-button v-if="manager" color="primary" mini @click="BackStockDialog(scope.$index, scope.row)">退库</mu-button>
                         <mu-button v-if="manager" color="primary" mini @click="deleteStock(scope.$index, scope.row)">删除</mu-button>
-                        <mu-button color="primary" mini @click="ViewPathDialog(scope.$index, scope.row)">查看</mu-button>
+                        <mu-button v-if="deviceType === 0" color="primary" mini @click="ViewPathDialog(scope.$index, scope.row)">查看</mu-button>
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination background 
-               layout="prev, pager, next, sizes" 
+            <el-pagination v-if="initData.datas.length > 0"
+                background 
+                layout="prev, pager, next, sizes" 
                 @current-change='pageChange' 
                 @size-change="handleSizeChange" 
                 prev-click='pageChange' 
@@ -148,11 +149,14 @@
                 <in-stock-layout v-on:Cancel="Cancel" v-on:getTypeList="getData"></in-stock-layout>
             </div>
             <div v-if="dialogData.type===0 && deviceType === 1">
-                <in-stock-layout-temp v-on:Cancel="Cancel" v-on:getTypeList="getData"></in-stock-layout-temp>
+                <in-stock-layout-temp v-on:Cancel="Cancel" v-on:getTypeList="getDataTemp"></in-stock-layout-temp>
             </div>
             <!-- 出库 -->
-            <div v-if="dialogData.type === 1">
+            <div v-if="dialogData.type === 1 && deviceType === 0">
                 <out-stock v-on:Cancel="Cancel" v-on:getTypeList="getData" :item="itemDevicesData" :batch="batch"  ref="outStock"></out-stock>
+            </div>
+            <div v-if="dialogData.type === 1 && deviceType === 1">
+                <out-stock-temp v-on:Cancel="Cancel" v-on:getTypeList="getDataTemp" :item="itemDevicesData" :batch="batch"  ref="outStock"></out-stock-temp>
             </div>
             <!-- 退库 -->
             <div v-if="dialogData.type === 2">
@@ -186,13 +190,14 @@
 import InStockLayout from "./InStockLayout.vue";
 import InStockLayoutTemp from "./InStockLayoutTemp.vue";
 import OutStock from "./OutStock.vue";
+import OutStockTemp from "./OutStockTemp.vue";
 import BackStock from "./BackStock.vue";
 import ViewPath from "./ViewPath.vue";
 import TestLayout from './TestLayout.vue';
 import moment from 'moment';
 import XLSX from './xlsx.full.min.js';
 export default {
-    components: { InStockLayout, InStockLayoutTemp, OutStock, BackStock, ViewPath, TestLayout },
+    components: { InStockLayout, InStockLayoutTemp, OutStock, OutStockTemp, BackStock, ViewPath, TestLayout },
     props: ['manager', 'deviceType'],
     data() {
         return {
@@ -316,16 +321,22 @@ export default {
                 }
             ],
             conditionsTemp: {
-                like: {
-                    sn: '',
-                    model: '',
-                    customer_name: '',
-                    collect_interval: null
-                },
                 filter: {
                     stock_status: ''
                 },
+                like: {
+                    sn: '',
+                    collector_model: '',
+                    customer_name: '',
+                    collect_interval: null
+                },
                 date: {},
+            },
+            OutOrBackStockParams: {
+                type: 'backstock',
+                snList: [],
+                user_name: sessionStorage.getItem('fullname'),
+                user_id: sessionStorage.getItem('user_id')
             }
         }
     },
@@ -336,19 +347,34 @@ export default {
                this.conditions.date.start_time =moment(this.conditions.date.start_time).format().split('T')[0]+"T00:00:00.000Z";
                this.conditions.date.end_time =moment(this.conditions.date.end_time).format().split('T')[0]+"T15:59:59.000Z";
             }
-            this.getData();
+            if(this.deviceType === 0) {
+                this.getData();
+            }
+            if(this.deviceType === 1) {
+                this.getDataTemp();
+            }
         },
         reset() {
             this.page_number = 1;
-            this.conditions.like.collector_id = '';
-            this.conditions.like.customer_name = '';
-            this.conditions.like.collector_model = '';
-            this.conditions.filter.check_result = '';
-            this.conditions.filter.stock_status  = '';
-            this.conditions.filter.status = '';
             this.conditions.date.start_time = '';
             this.conditions.date.end_time = '';
-            this.getData();
+            if(this.deviceType === 0) {
+                this.conditions.like.collector_id = '';
+                this.conditions.like.customer_name = '';
+                this.conditions.like.collector_model = '';
+                this.conditions.filter.check_result = '';
+                this.conditions.filter.stock_status  = '';
+                this.conditions.filter.status = '';
+                this.getData();
+            }
+            if(this.deviceType === 1) {
+                this.conditionsTemp.filter.stock_status  = '';
+                this.conditionsTemp.like.sn = '';
+                this.conditionsTemp.like.model = '';
+                this.conditionsTemp.like.customer_name = '';
+                this.conditionsTemp.like.collect_interval = null;
+                this.getDataTemp();
+            }
         },
         //批量出库赋值
         handleSelectionChange(val){
@@ -360,7 +386,7 @@ export default {
                 this.OutStockDialog(this.multipleSelection,true)
             }else{
                 this.$message({
-                    message: '请选择采集器',
+                    message: '请选择出库设备',
                     type: 'warning'
                 })
             }
@@ -383,8 +409,8 @@ export default {
                 delete this.conditions.filter.status;
             }
             requestData.filter = this.conditions.filter;
+            console.log(requestData);
             const { result: { rows, total } } = await this.$http('devices', { data: requestData });
-            console.log(rows)
             for (const data of rows) {
                 data.test_result = data.check_result === 0 ? '不合格' : data.check_result === 2 ? '未检测' : data.check_result === 3 ? "维修中" :"合格";
                 data.status = data.status ? '启用' : '停用';
@@ -392,16 +418,57 @@ export default {
                 data.stock_status = data.stock_status === 0 ? '未出库' : '已出库';
             }
             this.initData.datas = rows;
-            this.initData.total = total
+            this.initData.total = total;
+        },
+        // 获取主数据-温度计
+        async getDataTemp() {
+            const itemReg = /^([1-9]\d*|[0]{1,1})$/;
+            if(!itemReg.test(this.conditionsTemp.like.collect_interval) && this.conditionsTemp.like.collect_interval !== null) {
+                this.$message({
+                    message: '采集周期格式不真确', 
+                    type: 'warning'
+                })
+            }else {
+                if (this.conditionsTemp.filter.status === '') {
+                    delete this.conditionsTemp.filter.status;
+                }
+                if (this.conditionsTemp.filter.stock_status  === '') {
+                    delete this.conditionsTemp.filter.stock_status ;
+                }
+                if(this.conditionsTemp.like.collect_interval !== null) {
+                    this.conditionsTemp.like.collect_interval = Number(this.conditionsTemp.like.collect_interval);
+                }
+                const requestData = {
+                    filter: this.conditionsTemp.filter,
+                    like: this.conditionsTemp.like,
+                    date: this.conditions.date,
+                    page_size: this.page_size,
+                    page_number: this.page_number
+                }
+                console.log(requestData);
+                const { result: { rows, total } } = await this.$http('gauge', { data: requestData });
+                for (const data of rows) {
+                    data.status = data.status ? '启用' : '停用';
+                    data.indate && (data.indate = data.indate.split('T')[0]);
+                    data.stock_status = data.stock_status === 0 ? '未出库' : '已出库';
+                }
+                this.initData.datas = rows;
+                this.initData.total = total;
+            }
         },
         //换页
         pageChange(current) {
             this.page_number = current;
-            this.getData();
+            if(this.deviceType === 0) {
+                this.getData();
+            }
+            if(this.deviceType === 1) {
+                this.getDataTemp();
+            }
         },
         calculateBox() {
             if (this.manager) {
-                this.buttonBoxWidth = 260;
+                    this.buttonBoxWidth = 260;
             } else {
                 this.buttonBoxWidth = 80;
             }
@@ -424,29 +491,36 @@ export default {
             let checkedLen=0;
             let outstockLen=0;
             if(batch){ //先判断是否批量
-                row.forEach((item)=>{ 
-                   if(item.test_result === '合格'){
-                       checkedLen++;
-                   }
-                //    if(item.stock_status === '已出库'){
-                //        outstockLen++;
-                //    }
-                })
-                if(checkedLen !== row.length || outstockLen !== 0 ){ //是否所有都合格
-                    this.$message({
-                        message: '请检查是否所选都合格，不合格不能出库',
-                        type: 'warning'
+                if(this.deviceType === 0) {
+                    row.forEach((item)=>{ 
+                        if(item.test_result === '合格'){
+                            checkedLen++;
+                        }
                     })
-                }else{ 
+                    if(checkedLen !== row.length || outstockLen !== 0 ){ //是否所有都合格
+                        this.$message({
+                            message: '请检查是否所选都合格，不合格不能出库',
+                            type: 'warning'
+                        })
+                    }else{ 
+                        this.OutVar(row, batch);
+                    }
+                }
+                if(this.deviceType === 1) {
                     this.OutVar(row, batch);
                 }
             }else{
-                if(row.test_result !== '合格'){
-                    this.$message({
-                        message: '请先测试，合格之后才能出库',
-                        type: 'warning'
-                    })
-                }else{
+                if(this.deviceType === 0) {
+                    if(row.test_result !== '合格'){
+                        this.$message({
+                            message: '请先测试，合格之后才能出库',
+                            type: 'warning'
+                        })
+                    }else{
+                        this.OutVar(row, batch);
+                    }
+                }
+                if(this.deviceType === 1) {
                     this.OutVar(row, batch);
                 }
             }  
@@ -463,14 +537,28 @@ export default {
             }
         },
         //退库
-        BackStockDialog(index, row) {
-            this.dialogData.title = '退库';
-            this.dialogData.type = 2;
-            this.dialogData.dialogWidth = '500px';
-            this.itemDevicesData = row;
+        async BackStockDialog(index, row) {
             if (this.initData.datas[index].stock_status === '已出库') {
-                this.showDialog();
-            } else {
+                this.dialogData.title = '退库';
+                this.dialogData.type = 2;
+                this.dialogData.dialogWidth = '500px';
+                this.itemDevicesData = row;
+                if(this.deviceType === 0) {
+                    this.showDialog();
+                }
+                if(this.deviceType === 1) {
+                    this.OutOrBackStockParams.snList.push(row.sn);
+                    console.log(this.OutOrBackStockParams);
+                    const {result} = await this.$http.put('gauge',this.OutOrBackStockParams);
+                    this.$message({
+                        message: '成功退库',
+                        type: 'success'
+                    })
+                    this.getDataTemp();
+                    this.OutOrBackStockParams.snList = [];
+                }
+                
+            }else {
                 this.$message({
                     message: '请先出库',
                     type: 'warning'
@@ -591,7 +679,7 @@ export default {
                     })
                 }
             };
-            
+            obj.value = null;
             if(rABS) {
                 reader.readAsArrayBuffer(f);
             } else {
@@ -622,7 +710,12 @@ export default {
             this.datas.operator.user_name = sessionStorage.getItem('fullname');
         }
         this.calculateBox();
-        this.getData();
+        if(this.deviceType === 0) {
+            this.getData();
+        }
+        if(this.deviceType === 1) {
+            this.getDataTemp();
+        }
     },
 }
 </script>
