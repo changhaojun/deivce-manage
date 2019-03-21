@@ -444,8 +444,9 @@ export default {
                 page_size: this.page_size,
                 page_number: this.page_number
             }
-            // console.log(requestData);
+            console.log(requestData);
             const { result: { rows, total } } = await this.$http('gauge', { data: requestData });
+            console.log(rows)
             for (const data of rows) {
                 data.status = data.status ? '启用' : '停用';
                 data.indate && (data.indate = data.indate.split('T')[0]);
@@ -630,7 +631,12 @@ export default {
         // },
         handleSizeChange(val){
             this.page_size = val;
-            this.getData();
+            if(this.deviceType === 0) {
+                this.getData();
+            }
+            if(this.deviceType === 1) {
+                this.getDataTemp();
+            }
         },
         // 测试
         TestDialog(index, row){
