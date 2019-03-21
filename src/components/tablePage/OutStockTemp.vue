@@ -64,14 +64,15 @@ export default {
                     type: 'warning'
                 })
             }else {
-                const { result } = await this.$http.put('gauge', this.OutOrBackStockParams);
+                const res = await this.$http.put('gauge', this.OutOrBackStockParams);
+                console.log(res)
                 this.$message({
-                    message: '成功出库',
-                    type: 'success'
+                    message: res.message,
+                    type: res.code === 200 ? 'success' : 'warning'
                 })
-                this.Cancel();
+                this.Cancel();   
                 this.$emit("getTypeList");
-            }    
+            } 
         },
         initData() {
             this.OutOrBackStockParams.customer_id = "";

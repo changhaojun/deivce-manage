@@ -88,24 +88,7 @@ methods:{
                 type: 'success'
             }) 
             this.Cancel();
-            this.$emit("getTypeList");
-
-            // this.device.sn = this.device.sn.length ?  this.device.sn : JSON.stringify(this.device.sn);//当返回重复id时，需要转成字符串
-            // if(this.device.sn.length !== 8 || itemReg.test(this.device.sn)){
-            //     this.$message({
-            //         message: 'sn长度或者格式不正确', 
-            //         type: 'warning'
-            //     })   
-            // }else{
-            //     this.device.sn = Number(this.device.sn);
-            //     const {result} = await this.$http.post('gauge',this.datas);
-            //     this.$message({
-            //         message: '成功入库', 
-            //         type: 'success'
-            //     })  
-            //     this.Cancel();
-            //     this.$emit("getTypeList");
-            // }   
+            this.$emit("getTypeList"); 
         }
     },
     Cancel(){
