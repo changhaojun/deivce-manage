@@ -630,7 +630,12 @@ export default {
         // },
         handleSizeChange(val){
             this.page_size = val;
-            this.getData();
+            if(this.deviceType === 0) {
+                this.getData();
+            }
+            if(this.deviceType === 1) {
+                this.getDataTemp();
+            }
         },
         // 测试
         TestDialog(index, row){
