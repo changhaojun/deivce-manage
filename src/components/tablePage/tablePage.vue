@@ -418,7 +418,7 @@ export default {
                 delete this.conditions.filter.status;
             }
             requestData.filter = this.conditions.filter;
-            console.log(requestData);
+            // console.log(requestData);
             const { result: { rows, total } } = await this.$http('devices', { data: requestData });
             for (const data of rows) {
                 data.test_result = data.check_result === 0 ? '不合格' : data.check_result === 2 ? '未检测' : data.check_result === 3 ? "维修中" :"合格";
@@ -444,9 +444,8 @@ export default {
                 page_size: this.page_size,
                 page_number: this.page_number
             }
-            console.log(requestData);
+            // console.log(requestData);
             const { result: { rows, total } } = await this.$http('gauge', { data: requestData });
-            console.log(rows)
             for (const data of rows) {
                 data.status = data.status ? '启用' : '停用';
                 data.indate && (data.indate = data.indate.split('T')[0]);
@@ -646,8 +645,6 @@ export default {
         },
         // 采集周期
         UpdateTimeDialog(row, batch) {
-            console.log(row);
-            console.log(batch)
             this.UpdateTime(row, batch);
         },
         UpdateTime(row, batch) {
@@ -657,8 +654,6 @@ export default {
             this.dialogData.dialogWidth = '500px';
             this.itemDevicesData = row;
             this.batch = batch;
-            console.log(this.itemDevicesData)
-            console.log(this.batch)
         },
         //批量编辑
         batchEdit(){
@@ -697,7 +692,6 @@ export default {
                 //wb.SheetNames[0]是获取Sheets中第一个Sheet的名字
                 //wb.Sheets[Sheet名]获取第一个Sheet的数据
 
-                // console.log(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]))
                 // 遍历sheet中的sheetname
                 wb.SheetNames.forEach(sheetname => {
                     this.datas.devices = this.datas.devices.concat(XLSX.utils.sheet_to_json(wb.Sheets[sheetname]));

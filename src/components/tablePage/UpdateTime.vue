@@ -33,7 +33,7 @@ export default {
             const itemReg = /^([1-9]\d*|[0]{1,1})$/;
             if(itemReg.test(this.params.collect_interval)) {
                 this.params.collect_interval = Number(this.params.collect_interval);
-                console.log(this.params);
+                // console.log(this.params);
                 const { result } = await this.$http.put('gauge', this.params);
                 this.$message({
                     message: '采集周期修改成功',
@@ -58,7 +58,6 @@ export default {
                 this.params.collect_interval = this.item.collect_interval;
                 this.params.snList.push(this.item.sn);
             }
-            // console.log(this.params);
         },
         Cancel() {
             this.$emit("Cancel");

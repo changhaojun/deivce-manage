@@ -48,7 +48,6 @@ export default {
             const companyResult = await this.$http('company'); 
             this.customer = customerResult.result.rows;
             this.company = companyResult.result.rows;
-            console.log(this.customer)
         },
         //出库合同
         async getPact(){
@@ -57,7 +56,7 @@ export default {
         },
         //确定出库
         async SureOutStock() {
-            console.log(this.OutOrBackStockParams);
+            // console.log(this.OutOrBackStockParams);
             if(this.OutOrBackStockParams.customer_name === '' || this.OutOrBackStockParams.pact_number === '') {
                 this.$message({
                     message: '请完善出库信息',
@@ -65,7 +64,6 @@ export default {
                 })
             }else {
                 const res = await this.$http.put('gauge', this.OutOrBackStockParams);
-                console.log(res)
                 this.$message({
                     message: res.message,
                     type: res.code === 200 ? 'success' : 'warning'
@@ -86,7 +84,6 @@ export default {
         },
         //是否批量出库
         Isbacth(val){
-            console.log(val)
             this.OutOrBackStockParams.snList = [];
             if(this.batch){ //批量出库
                val.forEach((item) =>{
