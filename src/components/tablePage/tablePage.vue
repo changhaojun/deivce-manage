@@ -97,7 +97,7 @@
                             </mu-select>
                         </mu-form-item>
                     </el-col>
-                    <el-col :span="15" class="form-buttons">
+                    <el-col :span="20" class="form-buttons">
                         <mu-form-item>
                             <mu-button color="primary" @click="search">搜索</mu-button>
                             <mu-button color="warning" @click="reset">重置</mu-button>
@@ -650,7 +650,30 @@ export default {
         },
         // 采集周期
         UpdateTimeDialog(row, batch) {
-            this.UpdateTime(row, batch);
+            if(batch) {
+                let outStock = true;
+                row.forEach(item => {
+                    if(item.stock_status === '未出库') {
+                        outStock = false;
+                        
+                    }
+                })
+                if(!outStock) {
+                    this.$message({
+                        message: '选中的设备中有未出库的，请先出库',
+                        type: 'warning'
+                    })
+                }
+            }else {
+                if(row.stock_status === '已出库') {
+                    this.UpdateTime(row, batch);
+                }else {
+                    this.$message({
+                        message: '该设备未出库，请先出库',
+                        type: 'warning'
+                    })
+                }
+            }
         },
         UpdateTime(row, batch) {
             this.dialogData.title = '采集周期';
@@ -663,6 +686,7 @@ export default {
         //批量编辑
         batchEdit(){
             if(this.multipleSelection.length>0){
+                console.log(this.multipleSelection)
                 this.UpdateTimeDialog(this.multipleSelection, true)
             }else{
                 this.$message({

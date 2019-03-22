@@ -7,16 +7,18 @@
     </div>
     <el-menu mode="vertical" :show-timeout="200" background-color="#00142a" text-color="hsla(0, 0%, 100%, .65)" active-text-color="#409EFF">
       <template v-for="item in asideMenuConfig" >
-        <mu-list :key ="item.name" toggle-nested>
+        <mu-list toggle-nested>
           <mu-list-item button :ripple="true" v-if="!item.children" :to="item.path" :key="item.name" @click="toUrl(item)">
             <mu-list-item-action>
               <i v-if="item.icon" :class="item.icon"></i>
             </mu-list-item-action>
             <mu-list-item-title style="letter-spacing:1px">{{item.name}}</mu-list-item-title>
           </mu-list-item>
-          <mu-list-item button :ripple="true" v-else nested  nested-indent="true" :key="item.name">
+          <mu-list-item button :ripple="true" v-else nested  nested-indent="true" :key="item.name"
+            :open="open === item.value "  @toggle-nested="open = arguments[0] ? item.value : ''">
             <mu-list-item-action>
-              <i v-if="item.icon" :class="item.icon" ></i>
+              <i v-if="item.icon" :class="item.icon"></i>
+              <!-- <mu-icon :value="item.value"></mu-icon> -->
             </mu-list-item-action>
             <mu-list-item-title style="letter-spacing:1px">{{item.name}}</mu-list-item-title>
             <mu-list-item-action>
