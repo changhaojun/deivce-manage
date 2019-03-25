@@ -10,6 +10,7 @@ const asideMenuConfig = [
     name: '首页统计',
     // icon: 'el-icon-menu',
     icon: 'iconfont icon-tubiaozhexiantu',
+    value: 'send',
     children:[
       {
         path: '/main/model',
@@ -48,6 +49,7 @@ const asideMenuConfig = [
     name: '设备列表',
     // icon: 'el-icon-edit-outline',
     icon: 'iconfont icon-liebiao',
+    value: 'drafts',
     children: [
       {
         path: '/deviceList/dtu',
@@ -68,6 +70,7 @@ const asideMenuConfig = [
     name: '设备库存管理',
     // icon: 'el-icon-edit-outline',
     icon: 'iconfont icon-kucun',
+    value: 'inbox',
     children: [
       {
         path: '/deviceManage/dtu',
