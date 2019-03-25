@@ -71,13 +71,13 @@
                             <mu-text-field v-model="conditionsTemp.like.customer_name"></mu-text-field>
                         </mu-form-item>
                     </el-col>
-                    <el-col :span="4">
+                    <!-- <el-col :span="4">
                         <mu-form-item label="开启状态">
                             <mu-select v-model="conditionsTemp.filter.status" filterable placeholder="请选择" full-width>
                                 <mu-option v-for="item in statusOptions" :key="item.num" :label="item.label" :value="item.num"></mu-option>
                             </mu-select>
                         </mu-form-item>
-                    </el-col>    
+                    </el-col>     -->
                     <el-col :span="4">
                         <mu-form-item label="开始时间">
                             <mu-date-input v-model="conditions.date.start_time" label-float full-width></mu-date-input>
