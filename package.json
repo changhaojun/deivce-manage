@@ -11,7 +11,7 @@
   "dependencies": {
     "@d2-projects/d2-crud": "^1.1.0",
     "@vue-materials/basic-container": "^1.0.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "echarts": "^4.2.0-rc.1",
     "element-ui": "^2.3.6",
     "file-saver": "^2.0.0-rc.3",
